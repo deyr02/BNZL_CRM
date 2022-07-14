@@ -81,8 +81,7 @@ input NewCollection{
     Fields: [NewCustomFieldElement]
 }
 
-type Meta_UserCollection{
-  	CollectionID: ID! 				
+type Meta_UserCollection{				
     Fields: [CustomFieldElement!]
 }
 
@@ -106,7 +105,7 @@ input NewUserCollection{
 
 type Query{
 
-  GetUserCollection_Meta: Meta_UserCollection!
+  GetUser_MetaCollection: Meta_UserCollection!
 
 
   # table(_id: String!): Table!

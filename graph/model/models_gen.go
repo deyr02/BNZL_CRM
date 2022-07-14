@@ -30,8 +30,7 @@ type ElementValue struct {
 }
 
 type MetaUserCollection struct {
-	CollectionID string                `json:"CollectionID"`
-	Fields       []*CustomFieldElement `json:"Fields"`
+	Fields []*CustomFieldElement `json:"Fields"`
 }
 
 type NewCollection struct {

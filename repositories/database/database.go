@@ -1,0 +1,27 @@
+package database
+
+import (
+	"context"
+	"log"
+	"time"
+
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
+)
+
+const (
+	DATABASE_NAME = "bnzl_crm"
+)
+
+func CreateConnection() *mongo.Client {
+	clientOptions := options.Client().ApplyURI("mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+1.4.2")
+	clientOptions = clientOptions.SetMaxPoolSize(50)
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+	dbclient, err := mongo.Connect(ctx, clientOptions)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+	return dbclient
+}

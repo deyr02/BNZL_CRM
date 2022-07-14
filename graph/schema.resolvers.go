@@ -46,8 +46,8 @@ func (r *mutationResolver) ModifyUserByID(ctx context.Context, id *string) (*mod
 	panic(fmt.Errorf("not implemented"))
 }
 
-// GetUserCollectionMeta is the resolver for the GetUserCollection_Meta field.
-func (r *queryResolver) GetUserCollectionMeta(ctx context.Context) (*model.MetaUserCollection, error) {
+// GetUserMetaCollection is the resolver for the GetUser_MetaCollection field.
+func (r *queryResolver) GetUserMetaCollection(ctx context.Context) (*model.MetaUserCollection, error) {
 	panic(fmt.Errorf("not implemented"))
 }
 
