@@ -1,0 +1,142 @@
+# GraphQL schema example
+#
+# https://gqlgen.com/getting-started/
+
+
+
+#------------------------------------------
+#-----------form controls------------------
+#------------------------------------------
+enum FieldType{
+  TextBox
+  RadioButtons
+  CheckBox
+  CheckBoxes
+  DropDownList
+  InputFile
+  DatePicker
+  DateTimePicker
+
+}
+
+enum DataType{
+  Boolean
+  Date
+  Double
+  Integer
+  String
+}
+
+type CustomFieldElement{
+  FieldID: ID!
+  FieldName: String!
+	DataType: DataType!
+  FieldType: FieldType!
+  IsRequired: Boolean!
+  Visibility: Boolean!
+  SystemFieled: Boolean!
+  MaxValue: Int
+  MinValue: Int
+  DefaultValue: String!
+  PossibleValues: [String]
+  ElmentOrder:Int!
+}
+
+input NewCustomFieldElement{
+  FieldName: String!
+	DataType: DataType!
+  FieldType: FieldType!
+  IsRequired: Boolean!
+  Visibility: Boolean!
+  SystemFieled: Boolean!
+  MaxValue: Int
+  MinValue: Int
+  DefaultValue: String!
+  PossibleValues: [String]
+   ElmentOrder:Int!
+}
+
+#------------------------------------------
+#---------Element value -------------------
+#------------------------------------------
+
+type ElementValue{
+  key: String!
+  DataType: DataType!
+  value: String!
+}
+
+input NewElementValue{
+  key: String!
+  DataType: DataType!
+  value: String!
+}
+
+
+#------------------------------------------
+#--------- Forms --------------------------
+#------------------------------------------
+
+input NewCollection{ 
+    Fields: [NewCustomFieldElement]
+}
+
+type Meta_UserCollection{
+  	CollectionID: ID! 				
+    Fields: [CustomFieldElement!]
+}
+
+
+
+#------------------------------------------
+#--------- Collections --------------------------
+#------------------------------------------
+
+type UserCollection{
+  RecordID: ID!
+  data: [ElementValue!]!
+  
+}
+
+input NewUserCollection{
+  data: [NewElementValue!]!
+}
+
+
+
+type Query{
+
+  GetUserCollection_Meta: Meta_UserCollection!
+
+
+  # table(_id: String!): Table!
+  # tables: [Table!]!
+  # GetAllData(_collectionName: String!):[String]!
+  # getData(_collectionName: String!, Query: String!): [String]!
+  # getAllDatabyCollectionName(_collectionName: String!):[Record]!
+
+}
+
+type Mutation{
+
+  #-------Meta-user Collection---------------
+  AddNewElement_Meta_User(input:NewCustomFieldElement): Meta_UserCollection!
+  ModifyElement_Meta_user(_id:String, input:NewCustomFieldElement):Meta_UserCollection!
+  DeleteElement_Meta_user(_id:String):Meta_UserCollection!
+
+  #-------Meta-user Collection---------------
+  GetAllUser: [UserCollection!]!
+  GetUserByID(_id:String):UserCollection!
+  DeleteUserByID(_id:String):UserCollection!
+  ModifyUserByID(_id:String): UserCollection!
+  
+  # createTable(input: NewTable!): Table!
+  # DeleteTable(_id: String!):Table!
+  # addColumn(_id:String!, input:NewCustomField!): Table!
+  # DeleteColumn(_tableid: String!, _columnid:String!): Table!
+  # ModifyColumn(_tableid: String!, _columnid: String!, input:NewCustomField!): Table!
+
+  # AddData(_collectionName: String!, data: String!):String
+
+  # SaveData(_collectionName:String!, input: NewRecord): Record
+}
