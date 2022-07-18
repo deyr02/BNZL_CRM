@@ -20,7 +20,7 @@ type CustomFieldElement struct {
 	MinValue       *int      `json:"MinValue"`
 	DefaultValue   string    `json:"DefaultValue"`
 	PossibleValues []*string `json:"PossibleValues"`
-	ElmentOrder    int       `json:"ElmentOrder"`
+	FieldOrder     int       `json:"FieldOrder"`
 }
 
 type ElementValue struct {
@@ -48,7 +48,7 @@ type NewCustomFieldElement struct {
 	MinValue       *int      `json:"MinValue"`
 	DefaultValue   string    `json:"DefaultValue"`
 	PossibleValues []*string `json:"PossibleValues"`
-	ElmentOrder    int       `json:"ElmentOrder"`
+	FieldOrder     int       `json:"FieldOrder"`
 }
 
 type NewElementValue struct {

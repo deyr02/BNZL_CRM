@@ -47,9 +47,9 @@ type ComplexityRoot struct {
 	CustomFieldElement struct {
 		DataType       func(childComplexity int) int
 		DefaultValue   func(childComplexity int) int
-		ElmentOrder    func(childComplexity int) int
 		FieldID        func(childComplexity int) int
 		FieldName      func(childComplexity int) int
+		FieldOrder     func(childComplexity int) int
 		FieldType      func(childComplexity int) int
 		IsRequired     func(childComplexity int) int
 		MaxValue       func(childComplexity int) int
@@ -65,7 +65,7 @@ type ComplexityRoot struct {
 		Value    func(childComplexity int) int
 	}
 
-	Meta_UserCollection struct {
+	MetaUserCollection struct {
 		Fields func(childComplexity int) int
 	}
 
@@ -131,13 +131,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.CustomFieldElement.DefaultValue(childComplexity), true
 
-	case "CustomFieldElement.ElmentOrder":
-		if e.complexity.CustomFieldElement.ElmentOrder == nil {
-			break
-		}
-
-		return e.complexity.CustomFieldElement.ElmentOrder(childComplexity), true
-
 	case "CustomFieldElement.FieldID":
 		if e.complexity.CustomFieldElement.FieldID == nil {
 			break
@@ -151,6 +144,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.CustomFieldElement.FieldName(childComplexity), true
+
+	case "CustomFieldElement.FieldOrder":
+		if e.complexity.CustomFieldElement.FieldOrder == nil {
+			break
+		}
+
+		return e.complexity.CustomFieldElement.FieldOrder(childComplexity), true
 
 	case "CustomFieldElement.FieldType":
 		if e.complexity.CustomFieldElement.FieldType == nil {
@@ -222,12 +222,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.ElementValue.Value(childComplexity), true
 
-	case "Meta_UserCollection.Fields":
-		if e.complexity.Meta_UserCollection.Fields == nil {
+	case "MetaUserCollection.Fields":
+		if e.complexity.MetaUserCollection.Fields == nil {
 			break
 		}
 
-		return e.complexity.Meta_UserCollection.Fields(childComplexity), true
+		return e.complexity.MetaUserCollection.Fields(childComplexity), true
 
 	case "Mutation.AddNewElement_Meta_User":
 		if e.complexity.Mutation.AddNewElementMetaUser == nil {
@@ -308,7 +308,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.ModifyUserByID(childComplexity, args["_id"].(*string)), true
 
-	case "Query.GetUser_MetaCollection":
+	case "Query.GetUserMetaCollection":
 		if e.complexity.Query.GetUserMetaCollection == nil {
 			break
 		}
@@ -442,7 +442,7 @@ type CustomFieldElement{
   MinValue: Int
   DefaultValue: String!
   PossibleValues: [String]
-  ElmentOrder:Int!
+  FieldOrder:Int!
 }
 
 input NewCustomFieldElement{
@@ -456,7 +456,7 @@ input NewCustomFieldElement{
   MinValue: Int
   DefaultValue: String!
   PossibleValues: [String]
-   ElmentOrder:Int!
+  FieldOrder:Int!
 }
 
 #------------------------------------------
@@ -484,8 +484,8 @@ input NewCollection{
     Fields: [NewCustomFieldElement]
 }
 
-type Meta_UserCollection{				
-    Fields: [CustomFieldElement!]
+type MetaUserCollection{				
+    Fields: [CustomFieldElement!]!
 }
 
 
@@ -508,7 +508,7 @@ input NewUserCollection{
 
 type Query{
 
-  GetUser_MetaCollection: Meta_UserCollection!
+  GetUserMetaCollection: MetaUserCollection!
 
 
   # table(_id: String!): Table!
@@ -522,9 +522,9 @@ type Query{
 type Mutation{
 
   #-------Meta-user Collection---------------
-  AddNewElement_Meta_User(input:NewCustomFieldElement): Meta_UserCollection!
-  ModifyElement_Meta_user(_id:String, input:NewCustomFieldElement):Meta_UserCollection!
-  DeleteElement_Meta_user(_id:String):Meta_UserCollection!
+  AddNewElement_Meta_User(input:NewCustomFieldElement): MetaUserCollection!
+  ModifyElement_Meta_user(_id:String, input:NewCustomFieldElement):MetaUserCollection!
+  DeleteElement_Meta_user(_id:String):MetaUserCollection!
 
   #-------Meta-user Collection---------------
   GetAllUser: [UserCollection!]!
@@ -1177,8 +1177,8 @@ func (ec *executionContext) fieldContext_CustomFieldElement_PossibleValues(ctx c
 	return fc, nil
 }
 
-func (ec *executionContext) _CustomFieldElement_ElmentOrder(ctx context.Context, field graphql.CollectedField, obj *model.CustomFieldElement) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_CustomFieldElement_ElmentOrder(ctx, field)
+func (ec *executionContext) _CustomFieldElement_FieldOrder(ctx context.Context, field graphql.CollectedField, obj *model.CustomFieldElement) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CustomFieldElement_FieldOrder(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -1191,7 +1191,7 @@ func (ec *executionContext) _CustomFieldElement_ElmentOrder(ctx context.Context,
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.ElmentOrder, nil
+		return obj.FieldOrder, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1208,7 +1208,7 @@ func (ec *executionContext) _CustomFieldElement_ElmentOrder(ctx context.Context,
 	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_CustomFieldElement_ElmentOrder(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_CustomFieldElement_FieldOrder(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "CustomFieldElement",
 		Field:      field,
@@ -1353,8 +1353,8 @@ func (ec *executionContext) fieldContext_ElementValue_value(ctx context.Context,
 	return fc, nil
 }
 
-func (ec *executionContext) _Meta_UserCollection_Fields(ctx context.Context, field graphql.CollectedField, obj *model.MetaUserCollection) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Meta_UserCollection_Fields(ctx, field)
+func (ec *executionContext) _MetaUserCollection_Fields(ctx context.Context, field graphql.CollectedField, obj *model.MetaUserCollection) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_MetaUserCollection_Fields(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -1374,16 +1374,19 @@ func (ec *executionContext) _Meta_UserCollection_Fields(ctx context.Context, fie
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
 	res := resTmp.([]*model.CustomFieldElement)
 	fc.Result = res
-	return ec.marshalOCustomFieldElement2ᚕᚖgithubᚗcomᚋdeyr02ᚋbnzlcrmᚋgraphᚋmodelᚐCustomFieldElementᚄ(ctx, field.Selections, res)
+	return ec.marshalNCustomFieldElement2ᚕᚖgithubᚗcomᚋdeyr02ᚋbnzlcrmᚋgraphᚋmodelᚐCustomFieldElementᚄ(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Meta_UserCollection_Fields(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_MetaUserCollection_Fields(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
-		Object:     "Meta_UserCollection",
+		Object:     "MetaUserCollection",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
@@ -1411,8 +1414,8 @@ func (ec *executionContext) fieldContext_Meta_UserCollection_Fields(ctx context.
 				return ec.fieldContext_CustomFieldElement_DefaultValue(ctx, field)
 			case "PossibleValues":
 				return ec.fieldContext_CustomFieldElement_PossibleValues(ctx, field)
-			case "ElmentOrder":
-				return ec.fieldContext_CustomFieldElement_ElmentOrder(ctx, field)
+			case "FieldOrder":
+				return ec.fieldContext_CustomFieldElement_FieldOrder(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type CustomFieldElement", field.Name)
 		},
@@ -1448,7 +1451,7 @@ func (ec *executionContext) _Mutation_AddNewElement_Meta_User(ctx context.Contex
 	}
 	res := resTmp.(*model.MetaUserCollection)
 	fc.Result = res
-	return ec.marshalNMeta_UserCollection2ᚖgithubᚗcomᚋdeyr02ᚋbnzlcrmᚋgraphᚋmodelᚐMetaUserCollection(ctx, field.Selections, res)
+	return ec.marshalNMetaUserCollection2ᚖgithubᚗcomᚋdeyr02ᚋbnzlcrmᚋgraphᚋmodelᚐMetaUserCollection(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_AddNewElement_Meta_User(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -1460,9 +1463,9 @@ func (ec *executionContext) fieldContext_Mutation_AddNewElement_Meta_User(ctx co
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
 			case "Fields":
-				return ec.fieldContext_Meta_UserCollection_Fields(ctx, field)
+				return ec.fieldContext_MetaUserCollection_Fields(ctx, field)
 			}
-			return nil, fmt.Errorf("no field named %q was found under type Meta_UserCollection", field.Name)
+			return nil, fmt.Errorf("no field named %q was found under type MetaUserCollection", field.Name)
 		},
 	}
 	defer func() {
@@ -1507,7 +1510,7 @@ func (ec *executionContext) _Mutation_ModifyElement_Meta_user(ctx context.Contex
 	}
 	res := resTmp.(*model.MetaUserCollection)
 	fc.Result = res
-	return ec.marshalNMeta_UserCollection2ᚖgithubᚗcomᚋdeyr02ᚋbnzlcrmᚋgraphᚋmodelᚐMetaUserCollection(ctx, field.Selections, res)
+	return ec.marshalNMetaUserCollection2ᚖgithubᚗcomᚋdeyr02ᚋbnzlcrmᚋgraphᚋmodelᚐMetaUserCollection(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_ModifyElement_Meta_user(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -1519,9 +1522,9 @@ func (ec *executionContext) fieldContext_Mutation_ModifyElement_Meta_user(ctx co
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
 			case "Fields":
-				return ec.fieldContext_Meta_UserCollection_Fields(ctx, field)
+				return ec.fieldContext_MetaUserCollection_Fields(ctx, field)
 			}
-			return nil, fmt.Errorf("no field named %q was found under type Meta_UserCollection", field.Name)
+			return nil, fmt.Errorf("no field named %q was found under type MetaUserCollection", field.Name)
 		},
 	}
 	defer func() {
@@ -1566,7 +1569,7 @@ func (ec *executionContext) _Mutation_DeleteElement_Meta_user(ctx context.Contex
 	}
 	res := resTmp.(*model.MetaUserCollection)
 	fc.Result = res
-	return ec.marshalNMeta_UserCollection2ᚖgithubᚗcomᚋdeyr02ᚋbnzlcrmᚋgraphᚋmodelᚐMetaUserCollection(ctx, field.Selections, res)
+	return ec.marshalNMetaUserCollection2ᚖgithubᚗcomᚋdeyr02ᚋbnzlcrmᚋgraphᚋmodelᚐMetaUserCollection(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_DeleteElement_Meta_user(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -1578,9 +1581,9 @@ func (ec *executionContext) fieldContext_Mutation_DeleteElement_Meta_user(ctx co
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
 			case "Fields":
-				return ec.fieldContext_Meta_UserCollection_Fields(ctx, field)
+				return ec.fieldContext_MetaUserCollection_Fields(ctx, field)
 			}
-			return nil, fmt.Errorf("no field named %q was found under type Meta_UserCollection", field.Name)
+			return nil, fmt.Errorf("no field named %q was found under type MetaUserCollection", field.Name)
 		},
 	}
 	defer func() {
@@ -1830,8 +1833,8 @@ func (ec *executionContext) fieldContext_Mutation_ModifyUserByID(ctx context.Con
 	return fc, nil
 }
 
-func (ec *executionContext) _Query_GetUser_MetaCollection(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Query_GetUser_MetaCollection(ctx, field)
+func (ec *executionContext) _Query_GetUserMetaCollection(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_GetUserMetaCollection(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -1858,10 +1861,10 @@ func (ec *executionContext) _Query_GetUser_MetaCollection(ctx context.Context, f
 	}
 	res := resTmp.(*model.MetaUserCollection)
 	fc.Result = res
-	return ec.marshalNMeta_UserCollection2ᚖgithubᚗcomᚋdeyr02ᚋbnzlcrmᚋgraphᚋmodelᚐMetaUserCollection(ctx, field.Selections, res)
+	return ec.marshalNMetaUserCollection2ᚖgithubᚗcomᚋdeyr02ᚋbnzlcrmᚋgraphᚋmodelᚐMetaUserCollection(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Query_GetUser_MetaCollection(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Query_GetUserMetaCollection(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Query",
 		Field:      field,
@@ -1870,9 +1873,9 @@ func (ec *executionContext) fieldContext_Query_GetUser_MetaCollection(ctx contex
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
 			case "Fields":
-				return ec.fieldContext_Meta_UserCollection_Fields(ctx, field)
+				return ec.fieldContext_MetaUserCollection_Fields(ctx, field)
 			}
-			return nil, fmt.Errorf("no field named %q was found under type Meta_UserCollection", field.Name)
+			return nil, fmt.Errorf("no field named %q was found under type MetaUserCollection", field.Name)
 		},
 	}
 	return fc, nil
@@ -3911,7 +3914,7 @@ func (ec *executionContext) unmarshalInputNewCustomFieldElement(ctx context.Cont
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"FieldName", "DataType", "FieldType", "IsRequired", "Visibility", "SystemFieled", "MaxValue", "MinValue", "DefaultValue", "PossibleValues", "ElmentOrder"}
+	fieldsInOrder := [...]string{"FieldName", "DataType", "FieldType", "IsRequired", "Visibility", "SystemFieled", "MaxValue", "MinValue", "DefaultValue", "PossibleValues", "FieldOrder"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -3998,11 +4001,11 @@ func (ec *executionContext) unmarshalInputNewCustomFieldElement(ctx context.Cont
 			if err != nil {
 				return it, err
 			}
-		case "ElmentOrder":
+		case "FieldOrder":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("ElmentOrder"))
-			it.ElmentOrder, err = ec.unmarshalNInt2int(ctx, v)
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("FieldOrder"))
+			it.FieldOrder, err = ec.unmarshalNInt2int(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -4170,9 +4173,9 @@ func (ec *executionContext) _CustomFieldElement(ctx context.Context, sel ast.Sel
 
 			out.Values[i] = ec._CustomFieldElement_PossibleValues(ctx, field, obj)
 
-		case "ElmentOrder":
+		case "FieldOrder":
 
-			out.Values[i] = ec._CustomFieldElement_ElmentOrder(ctx, field, obj)
+			out.Values[i] = ec._CustomFieldElement_FieldOrder(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
 				invalids++
@@ -4230,20 +4233,23 @@ func (ec *executionContext) _ElementValue(ctx context.Context, sel ast.Selection
 	return out
 }
 
-var meta_UserCollectionImplementors = []string{"Meta_UserCollection"}
+var metaUserCollectionImplementors = []string{"MetaUserCollection"}
 
-func (ec *executionContext) _Meta_UserCollection(ctx context.Context, sel ast.SelectionSet, obj *model.MetaUserCollection) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, meta_UserCollectionImplementors)
+func (ec *executionContext) _MetaUserCollection(ctx context.Context, sel ast.SelectionSet, obj *model.MetaUserCollection) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, metaUserCollectionImplementors)
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
 		switch field.Name {
 		case "__typename":
-			out.Values[i] = graphql.MarshalString("Meta_UserCollection")
+			out.Values[i] = graphql.MarshalString("MetaUserCollection")
 		case "Fields":
 
-			out.Values[i] = ec._Meta_UserCollection_Fields(ctx, field, obj)
+			out.Values[i] = ec._MetaUserCollection_Fields(ctx, field, obj)
 
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -4367,7 +4373,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Query")
-		case "GetUser_MetaCollection":
+		case "GetUserMetaCollection":
 			field := field
 
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -4376,7 +4382,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._Query_GetUser_MetaCollection(ctx, field)
+				res = ec._Query_GetUserMetaCollection(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
@@ -4781,6 +4787,50 @@ func (ec *executionContext) marshalNBoolean2bool(ctx context.Context, sel ast.Se
 	return res
 }
 
+func (ec *executionContext) marshalNCustomFieldElement2ᚕᚖgithubᚗcomᚋdeyr02ᚋbnzlcrmᚋgraphᚋmodelᚐCustomFieldElementᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.CustomFieldElement) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNCustomFieldElement2ᚖgithubᚗcomᚋdeyr02ᚋbnzlcrmᚋgraphᚋmodelᚐCustomFieldElement(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
 func (ec *executionContext) marshalNCustomFieldElement2ᚖgithubᚗcomᚋdeyr02ᚋbnzlcrmᚋgraphᚋmodelᚐCustomFieldElement(ctx context.Context, sel ast.SelectionSet, v *model.CustomFieldElement) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
@@ -4895,18 +4945,18 @@ func (ec *executionContext) marshalNInt2int(ctx context.Context, sel ast.Selecti
 	return res
 }
 
-func (ec *executionContext) marshalNMeta_UserCollection2githubᚗcomᚋdeyr02ᚋbnzlcrmᚋgraphᚋmodelᚐMetaUserCollection(ctx context.Context, sel ast.SelectionSet, v model.MetaUserCollection) graphql.Marshaler {
-	return ec._Meta_UserCollection(ctx, sel, &v)
+func (ec *executionContext) marshalNMetaUserCollection2githubᚗcomᚋdeyr02ᚋbnzlcrmᚋgraphᚋmodelᚐMetaUserCollection(ctx context.Context, sel ast.SelectionSet, v model.MetaUserCollection) graphql.Marshaler {
+	return ec._MetaUserCollection(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNMeta_UserCollection2ᚖgithubᚗcomᚋdeyr02ᚋbnzlcrmᚋgraphᚋmodelᚐMetaUserCollection(ctx context.Context, sel ast.SelectionSet, v *model.MetaUserCollection) graphql.Marshaler {
+func (ec *executionContext) marshalNMetaUserCollection2ᚖgithubᚗcomᚋdeyr02ᚋbnzlcrmᚋgraphᚋmodelᚐMetaUserCollection(ctx context.Context, sel ast.SelectionSet, v *model.MetaUserCollection) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
 		}
 		return graphql.Null
 	}
-	return ec._Meta_UserCollection(ctx, sel, v)
+	return ec._MetaUserCollection(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalNNewElementValue2ᚕᚖgithubᚗcomᚋdeyr02ᚋbnzlcrmᚋgraphᚋmodelᚐNewElementValueᚄ(ctx context.Context, v interface{}) ([]*model.NewElementValue, error) {
@@ -5281,53 +5331,6 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 	}
 	res := graphql.MarshalBoolean(*v)
 	return res
-}
-
-func (ec *executionContext) marshalOCustomFieldElement2ᚕᚖgithubᚗcomᚋdeyr02ᚋbnzlcrmᚋgraphᚋmodelᚐCustomFieldElementᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.CustomFieldElement) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	ret := make(graphql.Array, len(v))
-	var wg sync.WaitGroup
-	isLen1 := len(v) == 1
-	if !isLen1 {
-		wg.Add(len(v))
-	}
-	for i := range v {
-		i := i
-		fc := &graphql.FieldContext{
-			Index:  &i,
-			Result: &v[i],
-		}
-		ctx := graphql.WithFieldContext(ctx, fc)
-		f := func(i int) {
-			defer func() {
-				if r := recover(); r != nil {
-					ec.Error(ctx, ec.Recover(ctx, r))
-					ret = nil
-				}
-			}()
-			if !isLen1 {
-				defer wg.Done()
-			}
-			ret[i] = ec.marshalNCustomFieldElement2ᚖgithubᚗcomᚋdeyr02ᚋbnzlcrmᚋgraphᚋmodelᚐCustomFieldElement(ctx, sel, v[i])
-		}
-		if isLen1 {
-			f(i)
-		} else {
-			go f(i)
-		}
-
-	}
-	wg.Wait()
-
-	for _, e := range ret {
-		if e == graphql.Null {
-			return graphql.Null
-		}
-	}
-
-	return ret
 }
 
 func (ec *executionContext) unmarshalOInt2ᚖint(ctx context.Context, v interface{}) (*int, error) {

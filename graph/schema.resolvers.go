@@ -9,7 +9,10 @@ import (
 
 	"github.com/deyr02/bnzlcrm/graph/generated"
 	"github.com/deyr02/bnzlcrm/graph/model"
+	"github.com/deyr02/bnzlcrm/repositories/user"
 )
+
+var userRepository user.User_Meta_Repository = user.New_User_Meta_repository()
 
 // AddNewElementMetaUser is the resolver for the AddNewElement_Meta_User field.
 func (r *mutationResolver) AddNewElementMetaUser(ctx context.Context, input *model.NewCustomFieldElement) (*model.MetaUserCollection, error) {
@@ -46,9 +49,9 @@ func (r *mutationResolver) ModifyUserByID(ctx context.Context, id *string) (*mod
 	panic(fmt.Errorf("not implemented"))
 }
 
-// GetUserMetaCollection is the resolver for the GetUser_MetaCollection field.
+// GetUserMetaCollection is the resolver for the GetUserMetaCollection field.
 func (r *queryResolver) GetUserMetaCollection(ctx context.Context) (*model.MetaUserCollection, error) {
-	panic(fmt.Errorf("not implemented"))
+	return userRepository.GetUser_MetaCollection(ctx), nil
 }
 
 // Mutation returns generated.MutationResolver implementation.

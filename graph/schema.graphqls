@@ -39,7 +39,7 @@ type CustomFieldElement{
   MinValue: Int
   DefaultValue: String!
   PossibleValues: [String]
-  ElmentOrder:Int!
+  FieldOrder:Int!
 }
 
 input NewCustomFieldElement{
@@ -53,7 +53,7 @@ input NewCustomFieldElement{
   MinValue: Int
   DefaultValue: String!
   PossibleValues: [String]
-   ElmentOrder:Int!
+  FieldOrder:Int!
 }
 
 #------------------------------------------
@@ -81,8 +81,8 @@ input NewCollection{
     Fields: [NewCustomFieldElement]
 }
 
-type Meta_UserCollection{				
-    Fields: [CustomFieldElement!]
+type MetaUserCollection{				
+    Fields: [CustomFieldElement!]!
 }
 
 
@@ -105,7 +105,7 @@ input NewUserCollection{
 
 type Query{
 
-  GetUser_MetaCollection: Meta_UserCollection!
+  GetUserMetaCollection: MetaUserCollection!
 
 
   # table(_id: String!): Table!
@@ -119,9 +119,9 @@ type Query{
 type Mutation{
 
   #-------Meta-user Collection---------------
-  AddNewElement_Meta_User(input:NewCustomFieldElement): Meta_UserCollection!
-  ModifyElement_Meta_user(_id:String, input:NewCustomFieldElement):Meta_UserCollection!
-  DeleteElement_Meta_user(_id:String):Meta_UserCollection!
+  AddNewElement_Meta_User(input:NewCustomFieldElement): MetaUserCollection!
+  ModifyElement_Meta_user(_id:String, input:NewCustomFieldElement):MetaUserCollection!
+  DeleteElement_Meta_user(_id:String):MetaUserCollection!
 
   #-------Meta-user Collection---------------
   GetAllUser: [UserCollection!]!

@@ -2,6 +2,7 @@ package database
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"time"
 
@@ -10,7 +11,7 @@ import (
 )
 
 const (
-	DATABASE_NAME = "bnzl_crm"
+	DATABASE_NAME = "bnzl_crm_1"
 )
 
 func CreateConnection() *mongo.Client {
@@ -23,5 +24,6 @@ func CreateConnection() *mongo.Client {
 	if err != nil {
 		log.Fatal(err)
 	}
+	fmt.Println("connected")
 	return dbclient
 }
