@@ -1,6 +1,6 @@
 module github.com/deyr02/bnzlcrm
 
-go 1.18
+go 1.17
 
 require (
 	github.com/99designs/gqlgen v0.17.12

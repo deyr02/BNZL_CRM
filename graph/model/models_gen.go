@@ -61,9 +61,22 @@ type NewUserCollection struct {
 	Data []*NewElementValue `json:"data"`
 }
 
+type NewUserRole struct {
+	RoleName   string      `json:"RoleName"`
+	Operations []Operation `json:"Operations"`
+	SystemRole *bool       `json:"SystemRole"`
+}
+
 type UserCollection struct {
 	RecordID string          `json:"RecordID"`
 	Data     []*ElementValue `json:"data"`
+}
+
+type UserRole struct {
+	Role       string      `json:"Role"`
+	RoleName   string      `json:"RoleName"`
+	Operations []Operation `json:"Operations"`
+	SystemRole bool        `json:"SystemRole"`
 }
 
 type DataType string
@@ -163,5 +176,50 @@ func (e *FieldType) UnmarshalGQL(v interface{}) error {
 }
 
 func (e FieldType) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+type Operation string
+
+const (
+	OperationGet  Operation = "GET"
+	OperationPost Operation = "POST"
+	OperationPut  Operation = "PUT"
+	OperationDel  Operation = "DEL"
+)
+
+var AllOperation = []Operation{
+	OperationGet,
+	OperationPost,
+	OperationPut,
+	OperationDel,
+}
+
+func (e Operation) IsValid() bool {
+	switch e {
+	case OperationGet, OperationPost, OperationPut, OperationDel:
+		return true
+	}
+	return false
+}
+
+func (e Operation) String() string {
+	return string(e)
+}
+
+func (e *Operation) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = Operation(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid operation", str)
+	}
+	return nil
+}
+
+func (e Operation) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }

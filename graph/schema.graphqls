@@ -138,7 +138,7 @@ type Query{
 
   GetUserMetaCollection: MetaUserCollection!
 
-  //UserRole
+  ##UserRole
   GetAllUserRole: [UserRole!]
 
 
@@ -164,10 +164,10 @@ type Mutation{
   ModifyUserByID(_id:String): UserCollection!
   
     #-------UserRole---------------
-  GetUserRoleID(_id:string): UserRole!
+  GetUserRoleID(_id:String): UserRole!
   AddNewUserRole(input:NewUserRole): UserRole!
   ModifyUserRole(_id:String, input:NewUserRole): UserRole
-  DeleUserRole(_id:string):String!
+  DeleUserRole(_id:String):String!
 
 
   # createTable(input: NewTable!): Table!
