@@ -16,17 +16,17 @@ var userRepository user.User_Meta_Repository = user.New_User_Meta_repository()
 
 // AddNewElementMetaUser is the resolver for the AddNewElement_Meta_User field.
 func (r *mutationResolver) AddNewElementMetaUser(ctx context.Context, input *model.NewCustomFieldElement) (*model.MetaUserCollection, error) {
-	panic(fmt.Errorf("not implemented"))
+	return userRepository.AddNewElement_Meta_User(ctx, input)
 }
 
 // ModifyElementMetaUser is the resolver for the ModifyElement_Meta_user field.
 func (r *mutationResolver) ModifyElementMetaUser(ctx context.Context, id *string, input *model.NewCustomFieldElement) (*model.MetaUserCollection, error) {
-	panic(fmt.Errorf("not implemented"))
+	return userRepository.ModifyElement_Meta_User(ctx, *id, input)
 }
 
 // DeleteElementMetaUser is the resolver for the DeleteElement_Meta_user field.
 func (r *mutationResolver) DeleteElementMetaUser(ctx context.Context, id *string) (*model.MetaUserCollection, error) {
-	panic(fmt.Errorf("not implemented"))
+	return userRepository.DeleteElement_Meta_User(ctx, *id)
 }
 
 // GetAllUser is the resolver for the GetAllUser field.
@@ -51,7 +51,7 @@ func (r *mutationResolver) ModifyUserByID(ctx context.Context, id *string) (*mod
 
 // GetUserMetaCollection is the resolver for the GetUserMetaCollection field.
 func (r *queryResolver) GetUserMetaCollection(ctx context.Context) (*model.MetaUserCollection, error) {
-	return userRepository.GetUser_MetaCollection(ctx), nil
+	return userRepository.GetUser_MetaCollection(ctx)
 }
 
 // Mutation returns generated.MutationResolver implementation.
