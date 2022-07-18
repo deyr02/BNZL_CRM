@@ -87,6 +87,9 @@ type MetaUserCollection{
 
 
 
+
+
+
 #------------------------------------------
 #--------- Collections --------------------------
 #------------------------------------------
@@ -102,10 +105,32 @@ input NewUserCollection{
 }
 
 
+#------------------------------------------
+#--------- UserRole --------------------------
+#------------------------------------------
+
+input NewUserRole{
+  RoleName: String!
+  SystemRole: Boolean
+}
+
+
+type UserRole {
+  Role: ID!
+  RoleName: String!
+  SystemRole: Boolean!
+}
+
+
+
+
 
 type Query{
 
   GetUserMetaCollection: MetaUserCollection!
+
+  //UserRole
+  GetAllUserRole: [UserRole!]
 
 
   # table(_id: String!): Table!
@@ -124,11 +149,18 @@ type Mutation{
   DeleteElement_Meta_user(_id:String):MetaUserCollection!
 
   #-------Meta-user Collection---------------
-  GetAllUser: [UserCollection!]!
+ # GetAllUser: [UserCollection!]!
   GetUserByID(_id:String):UserCollection!
   DeleteUserByID(_id:String):UserCollection!
   ModifyUserByID(_id:String): UserCollection!
   
+    #-------UserRole---------------
+  GetUserRoleID(_id:string): UserRole!
+  AddNewUserRole(input:NewUserRole): UserRole!
+  ModifyUserRole(_id:String, input:NewUserRole): UserRole
+  DeleUserRole(_id:string):String!
+
+
   # createTable(input: NewTable!): Table!
   # DeleteTable(_id: String!):Table!
   # addColumn(_id:String!, input:NewCustomField!): Table!
