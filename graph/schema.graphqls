@@ -109,8 +109,16 @@ input NewUserCollection{
 #--------- UserRole --------------------------
 #------------------------------------------
 
+enum operation{
+  GET 
+  POST 
+  PUT
+  DEL
+}
+
 input NewUserRole{
   RoleName: String!
+  Operations: [operation!]!
   SystemRole: Boolean
 }
 
@@ -118,6 +126,7 @@ input NewUserRole{
 type UserRole {
   Role: ID!
   RoleName: String!
+  Operations: [operation!]!
   SystemRole: Boolean!
 }
 

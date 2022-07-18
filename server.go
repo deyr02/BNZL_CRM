@@ -11,7 +11,7 @@ import (
 	"github.com/deyr02/bnzlcrm/graph/generated"
 )
 
-const defaultPort = "8080"
+const defaultPort = "8090"
 
 func main() {
 	port := os.Getenv("PORT")
