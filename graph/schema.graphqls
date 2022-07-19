@@ -128,6 +128,27 @@ type UserRole {
 }
 
 
+#------------------------------------------
+#--------- UserRole --------------------------
+#------------------------------------------
+
+type User {
+  UserID: ID!
+  UserROleID: ID!
+  CreatedAT: Date
+  UpdatedAT: Date
+  DeletedAT: Date
+  CreatedBy: ID
+  ModifiedBy: ID
+  SystemUser: Boolean!
+  Properties: [ElementValue!]!
+
+}
+
+type NewUser{
+   UserRoleID: ID!
+   Properties: [ElementValue!]!
+}
 
 
 
@@ -138,6 +159,10 @@ type Query{
   ##UserRole
   GetAllUserRole: [UserRole!]
   GetUserRoleByID(_id:String): UserRole!
+
+  ##User
+  GetAllUser:[User!]!
+  GetUserByID: User!
 
   # table(_id: String!): Table!
   # tables: [Table!]!
@@ -155,10 +180,9 @@ type Mutation{
   DeleteElement_Meta_user(_id:String):MetaUserCollection!
 
   #-------Meta-user Collection---------------
- # GetAllUser: [UserCollection!]!
-  GetUserByID(_id:String):UserCollection!
+  AddNewUser(input:NewUser): User!
   DeleteUserByID(_id:String):UserCollection!
-  ModifyUserByID(_id:String): UserCollection!
+  ModifyUserByID(_id:String, input:NewUser): UserCollection!
   
     #-------UserRole---------------
   
