@@ -141,14 +141,33 @@ type User {
   CreatedBy: ID
   ModifiedBy: ID
   SystemUser: Boolean!
+  UserName: String!
+  Password: String!
+  Email:String!
   Properties: [ElementValue!]!
 
 }
 
-type NewUser{
+input NewUser{
    UserRoleID: ID!
    Properties: [ElementValue!]!
 }
+
+input Login {
+  UserName: String!
+  Password: String!
+}
+
+type UserDTO{
+  UserID:String!
+  UserName: String!
+  RoleID: String!
+  Token:String!
+  Expiry: Date!
+
+}
+
+
 
 
 

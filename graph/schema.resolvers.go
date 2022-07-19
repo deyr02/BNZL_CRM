@@ -10,7 +10,8 @@ import (
 	"github.com/deyr02/bnzlcrm/graph/generated"
 	"github.com/deyr02/bnzlcrm/graph/model"
 	"github.com/deyr02/bnzlcrm/repositories/database"
-	"github.com/deyr02/bnzlcrm/repositories/user"
+	user "github.com/deyr02/bnzlcrm/repositories/user/userMeta"
+
 	userrole "github.com/deyr02/bnzlcrm/repositories/userRole"
 )
 
