@@ -75,12 +75,12 @@ func (r *queryResolver) GetUserMetaCollection(ctx context.Context) (*model.MetaU
 
 // GetAllUserRole is the resolver for the GetAllUserRole field.
 func (r *queryResolver) GetAllUserRole(ctx context.Context) ([]*model.UserRole, error) {
-	panic(fmt.Errorf("not implemented"))
+	return UserRoleRepository.GetAllUserRole(ctx)
 }
 
-// GetUserRoleID is the resolver for the GetUserRoleID field.
-func (r *queryResolver) GetUserRoleID(ctx context.Context, id *string) (*model.UserRole, error) {
-	panic(fmt.Errorf("not implemented"))
+// GetUserRoleByID is the resolver for the GetUserRoleByID field.
+func (r *queryResolver) GetUserRoleByID(ctx context.Context, id *string) (*model.UserRole, error) {
+	return UserRoleRepository.GetUserRoleByID(ctx, *id)
 }
 
 // Mutation returns generated.MutationResolver implementation.

@@ -17,3 +17,10 @@ type NewSystemFiled struct{}
 func (m *NewSystemFiled) Error() string {
 	return "Can not be added as a system field"
 }
+
+type NoRecordFound struct{}
+
+func (m *NoRecordFound) Error() string {
+
+	return "NO record found"
+}

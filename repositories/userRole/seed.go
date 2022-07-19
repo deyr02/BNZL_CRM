@@ -31,7 +31,7 @@ func getITSupportOperations() []model.Operation {
 }
 
 var ITSupportUserRole = &model.NewUserRole{
-	RoleName:   "Admin",
+	RoleName:   "ITSupport",
 	SystemRole: &isSystemRole,
 	Operations: getITSupportOperations(),
 }

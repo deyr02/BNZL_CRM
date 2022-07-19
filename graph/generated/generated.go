@@ -84,7 +84,7 @@ type ComplexityRoot struct {
 	Query struct {
 		GetAllUserRole        func(childComplexity int) int
 		GetUserMetaCollection func(childComplexity int) int
-		GetUserRoleID         func(childComplexity int, id *string) int
+		GetUserRoleByID       func(childComplexity int, id *string) int
 	}
 
 	UserCollection struct {
@@ -114,7 +114,7 @@ type MutationResolver interface {
 type QueryResolver interface {
 	GetUserMetaCollection(ctx context.Context) (*model.MetaUserCollection, error)
 	GetAllUserRole(ctx context.Context) ([]*model.UserRole, error)
-	GetUserRoleID(ctx context.Context, id *string) (*model.UserRole, error)
+	GetUserRoleByID(ctx context.Context, id *string) (*model.UserRole, error)
 }
 
 type executableSchema struct {
@@ -366,17 +366,17 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.GetUserMetaCollection(childComplexity), true
 
-	case "Query.GetUserRoleID":
-		if e.complexity.Query.GetUserRoleID == nil {
+	case "Query.GetUserRoleByID":
+		if e.complexity.Query.GetUserRoleByID == nil {
 			break
 		}
 
-		args, err := ec.field_Query_GetUserRoleID_args(context.TODO(), rawArgs)
+		args, err := ec.field_Query_GetUserRoleByID_args(context.TODO(), rawArgs)
 		if err != nil {
 			return 0, false
 		}
 
-		return e.complexity.Query.GetUserRoleID(childComplexity, args["_id"].(*string)), true
+		return e.complexity.Query.GetUserRoleByID(childComplexity, args["_id"].(*string)), true
 
 	case "UserCollection.data":
 		if e.complexity.UserCollection.Data == nil {
@@ -496,8 +496,6 @@ var sources = []*ast.Source{
 	{Name: "../schema.graphqls", Input: `# GraphQL schema example
 #
 # https://gqlgen.com/getting-started/
-
-
 
 #------------------------------------------
 #-----------form controls------------------
@@ -635,7 +633,7 @@ type Query{
 
   ##UserRole
   GetAllUserRole: [UserRole!]
-  GetUserRoleID(_id:String): UserRole!
+  GetUserRoleByID(_id:String): UserRole!
 
   # table(_id: String!): Table!
   # tables: [Table!]!
@@ -674,8 +672,7 @@ type Mutation{
   # AddData(_collectionName: String!, data: String!):String
 
   # SaveData(_collectionName:String!, input: NewRecord): Record
-}
-`, BuiltIn: false},
+}`, BuiltIn: false},
 }
 var parsedSchema = gqlparser.MustLoadSchema(sources...)
 
@@ -836,7 +833,7 @@ func (ec *executionContext) field_Mutation_ModifyUserRole_args(ctx context.Conte
 	return args, nil
 }
 
-func (ec *executionContext) field_Query_GetUserRoleID_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+func (ec *executionContext) field_Query_GetUserRoleByID_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
 	var arg0 *string
@@ -2266,8 +2263,8 @@ func (ec *executionContext) fieldContext_Query_GetAllUserRole(ctx context.Contex
 	return fc, nil
 }
 
-func (ec *executionContext) _Query_GetUserRoleID(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Query_GetUserRoleID(ctx, field)
+func (ec *executionContext) _Query_GetUserRoleByID(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_GetUserRoleByID(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -2280,7 +2277,7 @@ func (ec *executionContext) _Query_GetUserRoleID(ctx context.Context, field grap
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().GetUserRoleID(rctx, fc.Args["_id"].(*string))
+		return ec.resolvers.Query().GetUserRoleByID(rctx, fc.Args["_id"].(*string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2297,7 +2294,7 @@ func (ec *executionContext) _Query_GetUserRoleID(ctx context.Context, field grap
 	return ec.marshalNUserRole2ᚖgithubᚗcomᚋdeyr02ᚋbnzlcrmᚋgraphᚋmodelᚐUserRole(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Query_GetUserRoleID(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Query_GetUserRoleByID(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Query",
 		Field:      field,
@@ -2324,7 +2321,7 @@ func (ec *executionContext) fieldContext_Query_GetUserRoleID(ctx context.Context
 		}
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Query_GetUserRoleID_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+	if fc.Args, err = ec.field_Query_GetUserRoleByID_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return
 	}
@@ -5101,7 +5098,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			out.Concurrently(i, func() graphql.Marshaler {
 				return rrm(innerCtx)
 			})
-		case "GetUserRoleID":
+		case "GetUserRoleByID":
 			field := field
 
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -5110,7 +5107,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._Query_GetUserRoleID(ctx, field)
+				res = ec._Query_GetUserRoleByID(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}

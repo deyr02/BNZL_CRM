@@ -2,8 +2,6 @@
 #
 # https://gqlgen.com/getting-started/
 
-
-
 #------------------------------------------
 #-----------form controls------------------
 #------------------------------------------
@@ -140,7 +138,7 @@ type Query{
 
   ##UserRole
   GetAllUserRole: [UserRole!]
-  GetUserRoleID(_id:String): UserRole!
+  GetUserRoleByID(_id:String): UserRole!
 
   # table(_id: String!): Table!
   # tables: [Table!]!
