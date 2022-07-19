@@ -73,7 +73,7 @@ type UserCollection struct {
 }
 
 type UserRole struct {
-	Role       string      `json:"Role"`
+	RoleID     string      `json:"RoleID"`
 	RoleName   string      `json:"RoleName"`
 	Operations []Operation `json:"Operations"`
 	SystemRole bool        `json:"SystemRole"`

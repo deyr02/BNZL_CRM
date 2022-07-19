@@ -124,7 +124,7 @@ input NewUserRole{
 
 
 type UserRole {
-  Role: ID!
+  RoleID: ID!
   RoleName: String!
   Operations: [operation!]!
   SystemRole: Boolean!
@@ -140,7 +140,7 @@ type Query{
 
   ##UserRole
   GetAllUserRole: [UserRole!]
-
+  GetUserRoleID(_id:String): UserRole!
 
   # table(_id: String!): Table!
   # tables: [Table!]!
@@ -164,7 +164,7 @@ type Mutation{
   ModifyUserByID(_id:String): UserCollection!
   
     #-------UserRole---------------
-  GetUserRoleID(_id:String): UserRole!
+  
   AddNewUserRole(input:NewUserRole): UserRole!
   ModifyUserRole(_id:String, input:NewUserRole): UserRole
   DeleUserRole(_id:String):String!

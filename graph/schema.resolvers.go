@@ -9,20 +9,32 @@ import (
 
 	"github.com/deyr02/bnzlcrm/graph/generated"
 	"github.com/deyr02/bnzlcrm/graph/model"
+	"github.com/deyr02/bnzlcrm/repositories/database"
+	"github.com/deyr02/bnzlcrm/repositories/user"
+	userrole "github.com/deyr02/bnzlcrm/repositories/userRole"
 )
+
+var client = database.CreateConnection()
+var userRepository user.User_Meta_Repository = user.New_User_Meta_repository(client)
+var UserRoleRepository userrole.User_Role_Repository = userrole.New_User_Role_repository(client)
 
 // AddNewElementMetaUser is the resolver for the AddNewElement_Meta_User field.
 func (r *mutationResolver) AddNewElementMetaUser(ctx context.Context, input *model.NewCustomFieldElement) (*model.MetaUserCollection, error) {
-	panic(fmt.Errorf("not implemented"))
+	return userRepository.AddNewElement_Meta_User(ctx, input)
 }
 
 // ModifyElementMetaUser is the resolver for the ModifyElement_Meta_user field.
 func (r *mutationResolver) ModifyElementMetaUser(ctx context.Context, id *string, input *model.NewCustomFieldElement) (*model.MetaUserCollection, error) {
-	panic(fmt.Errorf("not implemented"))
+	return userRepository.ModifyElement_Meta_User(ctx, *id, input)
 }
 
 // DeleteElementMetaUser is the resolver for the DeleteElement_Meta_user field.
 func (r *mutationResolver) DeleteElementMetaUser(ctx context.Context, id *string) (*model.MetaUserCollection, error) {
+	return userRepository.DeleteElement_Meta_User(ctx, *id)
+}
+
+// GetAllUser is the resolver for the GetAllUser field.
+func (r *mutationResolver) GetAllUser(ctx context.Context) ([]*model.UserCollection, error) {
 	panic(fmt.Errorf("not implemented"))
 }
 
@@ -41,33 +53,33 @@ func (r *mutationResolver) ModifyUserByID(ctx context.Context, id *string) (*mod
 	panic(fmt.Errorf("not implemented"))
 }
 
-// GetUserRoleID is the resolver for the GetUserRoleID field.
-func (r *mutationResolver) GetUserRoleID(ctx context.Context, id *string) (*model.UserRole, error) {
-	panic(fmt.Errorf("not implemented"))
-}
-
 // AddNewUserRole is the resolver for the AddNewUserRole field.
 func (r *mutationResolver) AddNewUserRole(ctx context.Context, input *model.NewUserRole) (*model.UserRole, error) {
-	panic(fmt.Errorf("not implemented"))
+	return UserRoleRepository.AddNewUserRole(ctx, *input)
 }
 
 // ModifyUserRole is the resolver for the ModifyUserRole field.
 func (r *mutationResolver) ModifyUserRole(ctx context.Context, id *string, input *model.NewUserRole) (*model.UserRole, error) {
-	panic(fmt.Errorf("not implemented"))
+	return UserRoleRepository.ModifyUserRole(ctx, *id, input)
 }
 
 // DeleUserRole is the resolver for the DeleUserRole field.
 func (r *mutationResolver) DeleUserRole(ctx context.Context, id *string) (string, error) {
-	panic(fmt.Errorf("not implemented"))
+	return UserRoleRepository.DeleUserRole(ctx, *id)
 }
 
 // GetUserMetaCollection is the resolver for the GetUserMetaCollection field.
 func (r *queryResolver) GetUserMetaCollection(ctx context.Context) (*model.MetaUserCollection, error) {
-	panic(fmt.Errorf("not implemented"))
+	return userRepository.GetUser_MetaCollection(ctx)
 }
 
 // GetAllUserRole is the resolver for the GetAllUserRole field.
 func (r *queryResolver) GetAllUserRole(ctx context.Context) ([]*model.UserRole, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+// GetUserRoleID is the resolver for the GetUserRoleID field.
+func (r *queryResolver) GetUserRoleID(ctx context.Context, id *string) (*model.UserRole, error) {
 	panic(fmt.Errorf("not implemented"))
 }
 

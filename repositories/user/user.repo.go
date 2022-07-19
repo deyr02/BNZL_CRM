@@ -28,8 +28,8 @@ type User_Meta_Repository interface {
 	DeleteElement_Meta_User(ctx context.Context, _id string) (*model.MetaUserCollection, error)
 }
 
-func New_User_Meta_repository() User_Meta_Repository {
-	_client := database.CreateConnection()
+func New_User_Meta_repository(client *mongo.Client) User_Meta_Repository {
+	_client := client
 	collection := _client.Database(database.DATABASE_NAME).Collection(META_USER)
 	_count, _ := collection.CountDocuments(nil, bson.D{})
 
