@@ -117,7 +117,6 @@ enum operation{
 input NewUserRole{
   RoleName: String!
   Operations: [operation!]!
-  SystemRole: Boolean
 }
 
 

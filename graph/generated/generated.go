@@ -612,7 +612,6 @@ enum operation{
 input NewUserRole{
   RoleName: String!
   Operations: [operation!]!
-  SystemRole: Boolean
 }
 
 
@@ -4717,7 +4716,7 @@ func (ec *executionContext) unmarshalInputNewUserRole(ctx context.Context, obj i
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"RoleName", "Operations", "SystemRole"}
+	fieldsInOrder := [...]string{"RoleName", "Operations"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -4737,14 +4736,6 @@ func (ec *executionContext) unmarshalInputNewUserRole(ctx context.Context, obj i
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("Operations"))
 			it.Operations, err = ec.unmarshalNoperation2ᚕgithubᚗcomᚋdeyr02ᚋbnzlcrmᚋgraphᚋmodelᚐOperationᚄ(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "SystemRole":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("SystemRole"))
-			it.SystemRole, err = ec.unmarshalOBoolean2ᚖbool(ctx, v)
 			if err != nil {
 				return it, err
 			}

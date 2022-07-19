@@ -64,7 +64,6 @@ type NewUserCollection struct {
 type NewUserRole struct {
 	RoleName   string      `json:"RoleName"`
 	Operations []Operation `json:"Operations"`
-	SystemRole *bool       `json:"SystemRole"`
 }
 
 type UserCollection struct {

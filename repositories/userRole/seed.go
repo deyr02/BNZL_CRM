@@ -14,14 +14,11 @@ func getAdminOperation() []model.Operation {
 	return AdminOperation
 }
 
-var _systemRole = true
 var AdminUserRole = &model.NewUserRole{
 	RoleName:   "Admin",
-	SystemRole: &_systemRole,
 	Operations: getAdminOperation(),
 }
 
-var isSystemRole = false
 var _operations []model.Operation
 
 func getITSupportOperations() []model.Operation {
@@ -32,6 +29,5 @@ func getITSupportOperations() []model.Operation {
 
 var ITSupportUserRole = &model.NewUserRole{
 	RoleName:   "ITSupport",
-	SystemRole: &isSystemRole,
 	Operations: getITSupportOperations(),
 }

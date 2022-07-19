@@ -18,9 +18,25 @@ func (m *NewSystemFiled) Error() string {
 	return "Can not be added as a system field"
 }
 
+//-----------------------------------------
+//-----------------User Role---------------
+//-----------------------------------------
+
 type NoRecordFound struct{}
 
 func (m *NoRecordFound) Error() string {
 
 	return "NO record found"
+}
+
+type UserRoleExist struct{}
+
+func (m *UserRoleExist) Error() string {
+	return "User Role exist"
+}
+
+type SystemRole struct{}
+
+func (m *SystemRole) Error() string {
+	return "System Role can not be modified"
 }

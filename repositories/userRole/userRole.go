@@ -2,6 +2,9 @@ package userrole
 
 import (
 	"context"
+	"math/rand"
+	"strconv"
+	"strings"
 
 	"github.com/deyr02/bnzlcrm/graph/model"
 	customerror "github.com/deyr02/bnzlcrm/repositories/customError"
@@ -88,15 +91,85 @@ func (db *Database) GetUserRoleByID(ctx context.Context, _id string) (*model.Use
 
 func (db *Database) AddNewUserRole(ctx context.Context, input model.NewUserRole) (*model.UserRole, error) {
 
-	return nil, nil
+	collection := db.client.Database(database.DATABASE_NAME).Collection(USER_ROLE)
+	cursor, err := collection.Find(ctx, bson.D{})
+	if err != nil {
+		return nil, err
+	}
+
+	var user_roles []*model.UserRole
+	err_1 := cursor.All(ctx, &user_roles)
+	if err_1 != nil {
+		return nil, &customerror.NoRecordFound{}
+	}
+
+	for _, element := range user_roles {
+		if strings.EqualFold(element.RoleName, input.RoleName) {
+			return nil, &customerror.UserRoleExist{}
+		}
+	}
+
+	_user_role := &model.UserRole{
+		RoleID:     strconv.Itoa(rand.Int()),
+		RoleName:   input.RoleName,
+		SystemRole: false,
+		Operations: input.Operations,
+	}
+	collection.InsertOne(ctx, _user_role)
+	return _user_role, nil
 }
 
 func (db *Database) ModifyUserRole(ctx context.Context, _id string, input *model.NewUserRole) (*model.UserRole, error) {
 
-	return nil, nil
+	collection := db.client.Database(database.DATABASE_NAME).Collection(USER_ROLE)
+	cursor, err := collection.Find(ctx, bson.D{})
+	if err != nil {
+		return nil, err
+	}
+
+	var user_roles []*model.UserRole
+	err_1 := cursor.All(ctx, &user_roles)
+	if err_1 != nil {
+		return nil, &customerror.NoRecordFound{}
+	}
+
+	var _user_role *model.UserRole
+	//checking if role exists
+	for _, element := range user_roles {
+		if element.RoleID != _id {
+			if strings.EqualFold(element.RoleName, input.RoleName) {
+				return nil, &customerror.UserRoleExist{}
+			}
+		}
+		if element.RoleID == _id {
+			_user_role = element
+		}
+
+	}
+	if _user_role == nil {
+		return nil, &customerror.NoRecordFound{}
+	}
+	//checking if trying to modify systemRole
+	if _user_role.SystemRole {
+		return nil, &customerror.SystemRole{}
+	}
+
+	_user_role.RoleName = input.RoleName
+	_user_role.Operations = input.Operations
+
+	collection.FindOneAndUpdate(ctx, bson.D{{Key: "roleid", Value: _id}}, bson.M{"$set": bson.M{"rolename": input.RoleName, "operations": input.Operations}})
+	return _user_role, nil
 }
 
 func (db *Database) DeleUserRole(ctx context.Context, _id string) (string, error) {
-
-	return "", nil
+	collection := db.client.Database(database.DATABASE_NAME).Collection(USER_ROLE)
+	user_role, err := db.GetUserRoleByID(ctx, _id)
+	if err != nil {
+		return "", err
+	}
+	if user_role.SystemRole {
+		return "", &customerror.SystemRole{}
+	}
+	collection.FindOneAndDelete(ctx, bson.D{{Key: "roleid", Value: _id}})
+	return "Role Deleted", nil
 }
