@@ -128,6 +128,7 @@ type UserRole {
 }
 
 
+
 #------------------------------------------
 #--------- UserRole --------------------------
 #------------------------------------------
@@ -164,14 +165,17 @@ input Login {
 }
 
 type UserDTO{
-  UserID:String!
   UserName: String!
-  RoleID: String!
   Token:String!
   Expiry: Date!
 
 }
 
+type TokenServiceDto{
+  UserName: String!
+  RoleID:String!
+  ExpiryDate:Date!
+}
 
 
 
@@ -187,6 +191,7 @@ type Query{
   ##User
   GetAllUser:[User!]!
   GetUserByID(_id:String): User!
+ # GetUserByUserName (_userName: String): User!
 
   # table(_id: String!): Table!
   # tables: [Table!]!
@@ -211,6 +216,7 @@ type Mutation{
   #AssignRole(_userID: string, _roleID String): User!
   #UpdatePassword(_id:string, password String): string
   #LockUser(_id:string): Boolean
+  #RefreshToken(): UserDto
   
     #-------UserRole---------------
   

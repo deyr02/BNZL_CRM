@@ -2,7 +2,6 @@ package database
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"strings"
 	"time"
@@ -22,11 +21,9 @@ func CreateConnection() *mongo.Client {
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 	dbclient, err := mongo.Connect(ctx, clientOptions)
-
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println("connected")
 	return dbclient
 }
 

@@ -90,6 +90,12 @@ type ComplexityRoot struct {
 		GetUserRoleByID       func(childComplexity int, id *string) int
 	}
 
+	TokenServiceDto struct {
+		ExpiryDate func(childComplexity int) int
+		RoleID     func(childComplexity int) int
+		UserName   func(childComplexity int) int
+	}
+
 	User struct {
 		CreatedAt  func(childComplexity int) int
 		CreatedBy  func(childComplexity int) int
@@ -113,9 +119,7 @@ type ComplexityRoot struct {
 
 	UserDTO struct {
 		Expiry   func(childComplexity int) int
-		RoleID   func(childComplexity int) int
 		Token    func(childComplexity int) int
-		UserID   func(childComplexity int) int
 		UserName func(childComplexity int) int
 	}
 
@@ -439,6 +443,27 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.GetUserRoleByID(childComplexity, args["_id"].(*string)), true
 
+	case "TokenServiceDto.ExpiryDate":
+		if e.complexity.TokenServiceDto.ExpiryDate == nil {
+			break
+		}
+
+		return e.complexity.TokenServiceDto.ExpiryDate(childComplexity), true
+
+	case "TokenServiceDto.RoleID":
+		if e.complexity.TokenServiceDto.RoleID == nil {
+			break
+		}
+
+		return e.complexity.TokenServiceDto.RoleID(childComplexity), true
+
+	case "TokenServiceDto.UserName":
+		if e.complexity.TokenServiceDto.UserName == nil {
+			break
+		}
+
+		return e.complexity.TokenServiceDto.UserName(childComplexity), true
+
 	case "User.CreatedAT":
 		if e.complexity.User.CreatedAt == nil {
 			break
@@ -551,26 +576,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.UserDTO.Expiry(childComplexity), true
 
-	case "UserDTO.RoleID":
-		if e.complexity.UserDTO.RoleID == nil {
-			break
-		}
-
-		return e.complexity.UserDTO.RoleID(childComplexity), true
-
 	case "UserDTO.Token":
 		if e.complexity.UserDTO.Token == nil {
 			break
 		}
 
 		return e.complexity.UserDTO.Token(childComplexity), true
-
-	case "UserDTO.UserID":
-		if e.complexity.UserDTO.UserID == nil {
-			break
-		}
-
-		return e.complexity.UserDTO.UserID(childComplexity), true
 
 	case "UserDTO.UserName":
 		if e.complexity.UserDTO.UserName == nil {
@@ -812,6 +823,7 @@ type UserRole {
 }
 
 
+
 #------------------------------------------
 #--------- UserRole --------------------------
 #------------------------------------------
@@ -848,14 +860,17 @@ input Login {
 }
 
 type UserDTO{
-  UserID:String!
   UserName: String!
-  RoleID: String!
   Token:String!
   Expiry: Date!
 
 }
 
+type TokenServiceDto{
+  UserName: String!
+  RoleID:String!
+  ExpiryDate:Date!
+}
 
 
 
@@ -871,6 +886,7 @@ type Query{
   ##User
   GetAllUser:[User!]!
   GetUserByID(_id:String): User!
+ # GetUserByUserName (_userName: String): User!
 
   # table(_id: String!): Table!
   # tables: [Table!]!
@@ -892,6 +908,9 @@ type Mutation{
   DeleteUser(_id:String): String!
   ModifyUser(_id:String, input:NewUser): User!
   Login(input:Login): UserDTO!
+  #AssignRole(_userID: string, _roleID String): User!
+  #UpdatePassword(_id:string, password String): string
+  #LockUser(_id:string): Boolean
   
     #-------UserRole---------------
   
@@ -2335,12 +2354,8 @@ func (ec *executionContext) fieldContext_Mutation_Login(ctx context.Context, fie
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
-			case "UserID":
-				return ec.fieldContext_UserDTO_UserID(ctx, field)
 			case "UserName":
 				return ec.fieldContext_UserDTO_UserName(ctx, field)
-			case "RoleID":
-				return ec.fieldContext_UserDTO_RoleID(ctx, field)
 			case "Token":
 				return ec.fieldContext_UserDTO_Token(ctx, field)
 			case "Expiry":
@@ -2988,6 +3003,138 @@ func (ec *executionContext) fieldContext_Query___schema(ctx context.Context, fie
 				return ec.fieldContext___Schema_directives(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type __Schema", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _TokenServiceDto_UserName(ctx context.Context, field graphql.CollectedField, obj *model.TokenServiceDto) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TokenServiceDto_UserName(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.UserName, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TokenServiceDto_UserName(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TokenServiceDto",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _TokenServiceDto_RoleID(ctx context.Context, field graphql.CollectedField, obj *model.TokenServiceDto) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TokenServiceDto_RoleID(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.RoleID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TokenServiceDto_RoleID(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TokenServiceDto",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _TokenServiceDto_ExpiryDate(ctx context.Context, field graphql.CollectedField, obj *model.TokenServiceDto) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TokenServiceDto_ExpiryDate(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ExpiryDate, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNDate2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TokenServiceDto_ExpiryDate(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TokenServiceDto",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Date does not have child fields")
 		},
 	}
 	return fc, nil
@@ -3654,50 +3801,6 @@ func (ec *executionContext) fieldContext_UserCollection_data(ctx context.Context
 	return fc, nil
 }
 
-func (ec *executionContext) _UserDTO_UserID(ctx context.Context, field graphql.CollectedField, obj *model.UserDto) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_UserDTO_UserID(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.UserID, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_UserDTO_UserID(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "UserDTO",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
 func (ec *executionContext) _UserDTO_UserName(ctx context.Context, field graphql.CollectedField, obj *model.UserDto) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_UserDTO_UserName(ctx, field)
 	if err != nil {
@@ -3730,50 +3833,6 @@ func (ec *executionContext) _UserDTO_UserName(ctx context.Context, field graphql
 }
 
 func (ec *executionContext) fieldContext_UserDTO_UserName(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "UserDTO",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _UserDTO_RoleID(ctx context.Context, field graphql.CollectedField, obj *model.UserDto) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_UserDTO_RoleID(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.RoleID, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_UserDTO_RoleID(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "UserDTO",
 		Field:      field,
@@ -6608,6 +6667,48 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 	return out
 }
 
+var tokenServiceDtoImplementors = []string{"TokenServiceDto"}
+
+func (ec *executionContext) _TokenServiceDto(ctx context.Context, sel ast.SelectionSet, obj *model.TokenServiceDto) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, tokenServiceDtoImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("TokenServiceDto")
+		case "UserName":
+
+			out.Values[i] = ec._TokenServiceDto_UserName(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "RoleID":
+
+			out.Values[i] = ec._TokenServiceDto_RoleID(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "ExpiryDate":
+
+			out.Values[i] = ec._TokenServiceDto_ExpiryDate(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var userImplementors = []string{"User"}
 
 func (ec *executionContext) _User(ctx context.Context, sel ast.SelectionSet, obj *model.User) graphql.Marshaler {
@@ -6750,23 +6851,9 @@ func (ec *executionContext) _UserDTO(ctx context.Context, sel ast.SelectionSet, 
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("UserDTO")
-		case "UserID":
-
-			out.Values[i] = ec._UserDTO_UserID(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
 		case "UserName":
 
 			out.Values[i] = ec._UserDTO_UserName(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "RoleID":
-
-			out.Values[i] = ec._UserDTO_RoleID(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
 				invalids++

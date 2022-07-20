@@ -61,3 +61,9 @@ type SystemUser struct{}
 func (m *SystemUser) Error() string {
 	return "System Users can not be modified"
 }
+
+type WrongUsernameOrPasswordError struct{}
+
+func (m *WrongUsernameOrPasswordError) Error() string {
+	return "Wrong Userneame or Password"
+}

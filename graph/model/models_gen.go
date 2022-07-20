@@ -79,6 +79,12 @@ type NewUserRole struct {
 	Operations []Operation `json:"Operations"`
 }
 
+type TokenServiceDto struct {
+	UserName   string `json:"UserName"`
+	RoleID     string `json:"RoleID"`
+	ExpiryDate string `json:"ExpiryDate"`
+}
+
 type User struct {
 	UserID     string          `json:"UserID"`
 	RoleID     string          `json:"RoleID"`
@@ -101,9 +107,7 @@ type UserCollection struct {
 }
 
 type UserDto struct {
-	UserID   string `json:"UserID"`
 	UserName string `json:"UserName"`
-	RoleID   string `json:"RoleID"`
 	Token    string `json:"Token"`
 	Expiry   string `json:"Expiry"`
 }

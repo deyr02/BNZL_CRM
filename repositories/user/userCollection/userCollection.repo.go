@@ -5,9 +5,11 @@ import (
 
 	"time"
 
+	"github.com/deyr02/bnzlcrm/auth"
 	"github.com/deyr02/bnzlcrm/graph/model"
 	customerror "github.com/deyr02/bnzlcrm/repositories/customError"
 	"github.com/deyr02/bnzlcrm/repositories/database"
+	userrole "github.com/deyr02/bnzlcrm/repositories/userRole"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"golang.org/x/crypto/bcrypt"
@@ -223,11 +225,63 @@ func (db *Database) ModifyUser(ctx context.Context, _id string, input *model.New
 }
 
 func (db *Database) DeleteUser(ctx context.Context, _id string) (string, error) {
-	return "", nil
+	collection := db.client.Database(database.DATABASE_NAME).Collection(USER_COLLECTION)
+
+	//checking username already exists
+	cursor := collection.FindOne(ctx, bson.D{{Key: "userid", Value: _id}})
+
+	var user *model.User
+	cursor.Decode(&user)
+
+	if user == nil {
+		return "", &customerror.NoRecordFound{}
+	}
+
+	if user.SystemUser {
+		return "", &customerror.SystemUser{}
+	}
+
+	collection.FindOneAndDelete(ctx, bson.D{{Key: "userid", Value: _id}})
+	return "User deleted", nil
 }
 
 func (db *Database) Login(ctx context.Context, input *model.Login) (*model.UserDto, error) {
-	return nil, nil
+	collection := db.client.Database(database.DATABASE_NAME).Collection(USER_COLLECTION)
+	//checking username already exists
+	cursor := collection.FindOne(ctx, bson.D{{Key: "username", Value: input.UserName}})
+
+	var user *model.User
+	err := cursor.Decode(&user)
+
+	if err != nil {
+		return nil, &customerror.WrongUsernameOrPasswordError{}
+	}
+
+	if user == nil {
+		return nil, &customerror.WrongUsernameOrPasswordError{}
+	}
+	checkPassword := CheckPasswordHash(input.Password, user.Password)
+
+	if !checkPassword {
+		return nil, &customerror.WrongUsernameOrPasswordError{}
+	}
+	tokenServiceDto := &model.TokenServiceDto{
+		UserName:   user.UserName,
+		RoleID:     user.RoleID,
+		ExpiryDate: time.Now().Add(time.Hour * 24).String(),
+	}
+	token, erro := auth.GenerateToken(tokenServiceDto)
+
+	if erro != nil {
+		return nil, erro
+	}
+	userDto := &model.UserDto{
+		UserName: user.UserName,
+		Token:    token,
+		Expiry:   tokenServiceDto.ExpiryDate,
+	}
+
+	return userDto, nil
 }
 
 //HashPassword hashes given password
@@ -240,4 +294,50 @@ func HashPassword(password string) (string, error) {
 func CheckPasswordHash(password, hash string) bool {
 	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
 	return err == nil
+}
+
+type UserAuthRepository interface {
+	GetUserByUserName(username string) (*model.User, error)
+	IsUserAuthorized(roleid string, operation *model.Operation) bool
+}
+
+func NewUserAuthRepository() UserAuthRepository {
+	_client := database.CreateConnection()
+	return &Database{
+		client: _client,
+	}
+}
+
+func (db *Database) GetUserByUserName(username string) (*model.User, error) {
+	collection := db.client.Database(database.DATABASE_NAME).Collection(USER_COLLECTION)
+	cursor := collection.FindOne(nil, bson.D{{Key: "username", Value: username}})
+	var user *model.User
+	err := cursor.Decode(&user)
+	if err != nil {
+		return nil, &customerror.NoRecordFound{}
+	}
+	return user, nil
+}
+
+func (db *Database) IsUserAuthorized(roleid string, operation *model.Operation) bool {
+	collection := db.client.Database(database.DATABASE_NAME).Collection(userrole.USER_ROLE)
+	cursor := collection.FindOne(nil, bson.D{{Key: "roleid", Value: roleid}})
+	var userrole *model.UserRole
+	err := cursor.Decode(&userrole)
+	if err != nil {
+		return false
+	}
+	if userrole == nil {
+		return false
+	}
+	if userrole.RoleName == "Admin" {
+		return true
+	} else {
+		for _, ele := range userrole.Operations {
+			if ele == *operation {
+				return true
+			}
+		}
+		return false
+	}
 }
