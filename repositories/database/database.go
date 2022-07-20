@@ -4,8 +4,10 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strings"
 	"time"
 
+	"github.com/google/uuid"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -26,4 +28,9 @@ func CreateConnection() *mongo.Client {
 	}
 	fmt.Println("connected")
 	return dbclient
+}
+
+func Guid() string {
+	uuidWithHyphen := uuid.New()
+	return strings.Replace(uuidWithHyphen.String(), "-", "", -1)
 }

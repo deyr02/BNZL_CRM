@@ -836,6 +836,9 @@ type User {
 
 input NewUser{
    RoleID: String!
+   UserName: String!
+  Password: String!
+  Email:String!
    Properties: [NewElementValue!]!
 }
 
@@ -6043,7 +6046,7 @@ func (ec *executionContext) unmarshalInputNewUser(ctx context.Context, obj inter
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"RoleID", "Properties"}
+	fieldsInOrder := [...]string{"RoleID", "UserName", "Password", "Email", "Properties"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -6055,6 +6058,30 @@ func (ec *executionContext) unmarshalInputNewUser(ctx context.Context, obj inter
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("RoleID"))
 			it.RoleID, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "UserName":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("UserName"))
+			it.UserName, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "Password":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("Password"))
+			it.Password, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "Email":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("Email"))
+			it.Email, err = ec.unmarshalNString2string(ctx, v)
 			if err != nil {
 				return it, err
 			}

@@ -2,8 +2,6 @@ package userrole
 
 import (
 	"context"
-	"math/rand"
-	"strconv"
 	"strings"
 
 	"github.com/deyr02/bnzlcrm/graph/model"
@@ -110,7 +108,7 @@ func (db *Database) AddNewUserRole(ctx context.Context, input model.NewUserRole)
 	}
 
 	_user_role := &model.UserRole{
-		RoleID:     strconv.Itoa(rand.Int()),
+		RoleID:     database.Guid(),
 		RoleName:   input.RoleName,
 		SystemRole: false,
 		Operations: input.Operations,

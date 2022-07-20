@@ -3,8 +3,6 @@ package user
 import (
 	"context"
 	"log"
-	"math/rand"
-	"strconv"
 	"strings"
 
 	"github.com/deyr02/bnzlcrm/graph/model"
@@ -38,7 +36,7 @@ func New_User_Meta_repository(client *mongo.Client) User_Meta_Repository {
 
 		for _, element := range getSeedData() {
 			ele := &model.CustomFieldElement{
-				FieldID:        strconv.Itoa(rand.Int()),
+				FieldID:        database.Guid(),
 				FieldName:      element.FieldName,
 				DataType:       element.DataType,
 				FieldType:      element.FieldType,
@@ -94,7 +92,7 @@ func (db *Database) AddNewElement_Meta_User(ctx context.Context, newCustomFieldE
 	}
 
 	customFieldElement := &model.CustomFieldElement{
-		FieldID:        strconv.Itoa(rand.Int()),
+		FieldID:        database.Guid(),
 		FieldName:      newCustomFieldElement.FieldName,
 		DataType:       newCustomFieldElement.DataType,
 		FieldType:      newCustomFieldElement.FieldType,

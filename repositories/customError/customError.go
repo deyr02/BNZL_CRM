@@ -40,3 +40,24 @@ type SystemRole struct{}
 func (m *SystemRole) Error() string {
 	return "System Role can not be modified"
 }
+
+//-----------------------------------------
+//-----------------User Role---------------
+//-----------------------------------------
+type UserNameTaken struct{}
+
+func (m *UserNameTaken) Error() string {
+	return "Username taken"
+}
+
+type EmailAddressTaken struct{}
+
+func (m *EmailAddressTaken) Error() string {
+	return "Email already taken"
+}
+
+type SystemUser struct{}
+
+func (m *SystemUser) Error() string {
+	return "System Users can not be modified"
+}

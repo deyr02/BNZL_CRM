@@ -152,6 +152,9 @@ type User {
 
 input NewUser{
    RoleID: String!
+   UserName: String!
+  Password: String!
+  Email:String!
    Properties: [NewElementValue!]!
 }
 
@@ -205,6 +208,9 @@ type Mutation{
   DeleteUser(_id:String): String!
   ModifyUser(_id:String, input:NewUser): User!
   Login(input:Login): UserDTO!
+  #AssignRole(_userID: string, _roleID String): User!
+  #UpdatePassword(_id:string, password String): string
+  #LockUser(_id:string): Boolean
   
     #-------UserRole---------------
   

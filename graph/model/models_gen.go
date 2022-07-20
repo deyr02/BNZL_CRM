@@ -64,6 +64,9 @@ type NewElementValue struct {
 
 type NewUser struct {
 	RoleID     string             `json:"RoleID"`
+	UserName   string             `json:"UserName"`
+	Password   string             `json:"Password"`
+	Email      string             `json:"Email"`
 	Properties []*NewElementValue `json:"Properties"`
 }
 
