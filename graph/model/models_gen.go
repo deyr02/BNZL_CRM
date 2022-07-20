@@ -29,6 +29,11 @@ type ElementValue struct {
 	Value    string   `json:"value"`
 }
 
+type Login struct {
+	UserName string `json:"UserName"`
+	Password string `json:"Password"`
+}
+
 type MetaUserCollection struct {
 	Fields []*CustomFieldElement `json:"Fields"`
 }
@@ -57,6 +62,11 @@ type NewElementValue struct {
 	Value    string   `json:"value"`
 }
 
+type NewUser struct {
+	RoleID     string             `json:"RoleID"`
+	Properties []*NewElementValue `json:"Properties"`
+}
+
 type NewUserCollection struct {
 	Data []*NewElementValue `json:"data"`
 }
@@ -66,9 +76,33 @@ type NewUserRole struct {
 	Operations []Operation `json:"Operations"`
 }
 
+type User struct {
+	UserID     string          `json:"UserID"`
+	RoleID     string          `json:"RoleID"`
+	CreatedAt  *string         `json:"CreatedAT"`
+	UpdatedAt  *string         `json:"UpdatedAT"`
+	DeletedAt  *string         `json:"DeletedAT"`
+	CreatedBy  *string         `json:"CreatedBy"`
+	ModifiedBy *string         `json:"ModifiedBy"`
+	IsActive   bool            `json:"IsActive"`
+	SystemUser bool            `json:"SystemUser"`
+	UserName   string          `json:"UserName"`
+	Password   string          `json:"Password"`
+	Email      string          `json:"Email"`
+	Properties []*ElementValue `json:"Properties"`
+}
+
 type UserCollection struct {
 	RecordID string          `json:"RecordID"`
 	Data     []*ElementValue `json:"data"`
+}
+
+type UserDto struct {
+	UserID   string `json:"UserID"`
+	UserName string `json:"UserName"`
+	RoleID   string `json:"RoleID"`
+	Token    string `json:"Token"`
+	Expiry   string `json:"Expiry"`
 }
 
 type UserRole struct {

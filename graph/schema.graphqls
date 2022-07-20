@@ -131,15 +131,17 @@ type UserRole {
 #------------------------------------------
 #--------- UserRole --------------------------
 #------------------------------------------
+scalar Date
 
 type User {
   UserID: ID!
-  UserROleID: ID!
+  RoleID: ID!
   CreatedAT: Date
   UpdatedAT: Date
   DeletedAT: Date
   CreatedBy: ID
   ModifiedBy: ID
+  IsActive: Boolean!
   SystemUser: Boolean!
   UserName: String!
   Password: String!
@@ -149,8 +151,8 @@ type User {
 }
 
 input NewUser{
-   UserRoleID: ID!
-   Properties: [ElementValue!]!
+   RoleID: String!
+   Properties: [NewElementValue!]!
 }
 
 input Login {
@@ -181,7 +183,7 @@ type Query{
 
   ##User
   GetAllUser:[User!]!
-  GetUserByID: User!
+  GetUserByID(_id:String): User!
 
   # table(_id: String!): Table!
   # tables: [Table!]!
@@ -200,8 +202,9 @@ type Mutation{
 
   #-------Meta-user Collection---------------
   AddNewUser(input:NewUser): User!
-  DeleteUserByID(_id:String):UserCollection!
-  ModifyUserByID(_id:String, input:NewUser): UserCollection!
+  DeleteUser(_id:String): String!
+  ModifyUser(_id:String, input:NewUser): User!
+  Login(input:Login): UserDTO!
   
     #-------UserRole---------------
   
