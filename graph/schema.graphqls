@@ -83,6 +83,9 @@ type MetaUserCollection{
     Fields: [CustomFieldElement!]!
 }
 
+type MetaActivityCollection{				
+    Fields: [CustomFieldElement!]!
+}
 
 
 
@@ -178,11 +181,30 @@ type TokenServiceDto{
 }
 
 
+#------------------------------------------
+#--------- Activity --------------------------
+#------------------------------------------
+
+
+type Activity {
+  ActivityID: ID!
+
+}
+
+
+
+
+
+
 
 
 type Query{
 
+  ##------Meta User------------
   GetUserMetaCollection: MetaUserCollection!
+  ##------MetaActivity---------
+  GetMetaActivityCollection: MetaActivityCollection
+
 
   ##UserRole
   GetAllUserRole: [UserRole!]
@@ -193,11 +215,6 @@ type Query{
   GetUserByID(_id:String): User!
  # GetUserByUserName (_userName: String): User!
 
-  # table(_id: String!): Table!
-  # tables: [Table!]!
-  # GetAllData(_collectionName: String!):[String]!
-  # getData(_collectionName: String!, Query: String!): [String]!
-  # getAllDatabyCollectionName(_collectionName: String!):[Record]!
 
 }
 
@@ -208,30 +225,32 @@ type Mutation{
   ModifyElement_Meta_user(_id:String, input:NewCustomFieldElement):MetaUserCollection!
   DeleteElement_Meta_user(_id:String):MetaUserCollection!
 
-  #-------Meta-user Collection---------------
+#---------Meta Activity Collection------------
+  AddNewElement_Meta_Activity(input:NewCustomFieldElement): MetaActivityCollection!
+  ModifyElement_Meta_Activity(_id:String, input:NewCustomFieldElement):MetaActivityCollection!
+  DeleteElement_Meta_Activity(_id:String):MetaActivityCollection!
+
+
+
+
+
+  #--------userCollection----------------------
   AddNewUser(input:NewUser): User!
   DeleteUser(_id:String): String!
   ModifyUser(_id:String, input:NewUser): User!
   Login(input:Login): UserDTO!
+  ##-- the following methods need to be added later
   #AssignRole(_userID: string, _roleID String): User!
   #UpdatePassword(_id:string, password String): string
   #LockUser(_id:string): Boolean
   #RefreshToken(): UserDto
   
-    #-------UserRole---------------
+  #-------UserRole-------------------------------
   
   AddNewUserRole(input:NewUserRole): UserRole!
   ModifyUserRole(_id:String, input:NewUserRole): UserRole
   DeleUserRole(_id:String):String!
 
 
-  # createTable(input: NewTable!): Table!
-  # DeleteTable(_id: String!):Table!
-  # addColumn(_id:String!, input:NewCustomField!): Table!
-  # DeleteColumn(_tableid: String!, _columnid:String!): Table!
-  # ModifyColumn(_tableid: String!, _columnid: String!, input:NewCustomField!): Table!
 
-  # AddData(_collectionName: String!, data: String!):String
-
-  # SaveData(_collectionName:String!, input: NewRecord): Record
 }
