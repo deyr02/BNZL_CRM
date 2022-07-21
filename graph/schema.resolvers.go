@@ -8,6 +8,7 @@ import (
 
 	"github.com/deyr02/bnzlcrm/graph/generated"
 	"github.com/deyr02/bnzlcrm/graph/model"
+	metaactivity "github.com/deyr02/bnzlcrm/repositories/activity/metaActivity"
 	"github.com/deyr02/bnzlcrm/repositories/database"
 	"github.com/deyr02/bnzlcrm/repositories/user/userCollection"
 	user "github.com/deyr02/bnzlcrm/repositories/user/userMeta"
@@ -31,6 +32,7 @@ var client = database.CreateConnection()
 var userRepository user.User_Meta_Repository = user.New_User_Meta_repository(client)
 var UserRoleRepository userrole.User_Role_Repository = userrole.New_User_Role_repository(client)
 var userCollectionRepository userCollection.User_Repository = userCollection.New_User_Repository(client)
+var metaActivityRepository metaactivity.Meta_Activity_Repository = metaactivity.New_Meta_Activity_Repository(client)
 
 ///--------------------------------------------------------------------------------------------------------
 ///--------------------------------------------------------------------------------------------------------
@@ -60,6 +62,25 @@ func (r *mutationResolver) ModifyElementMetaUser(ctx context.Context, id *string
 // DeleteElementMetaUser is the resolver for the DeleteElement_Meta_user field.
 func (r *mutationResolver) DeleteElementMetaUser(ctx context.Context, id *string) (*model.MetaUserCollection, error) {
 	return userRepository.DeleteElement_Meta_User(ctx, *id)
+}
+
+///--------------------------------------------------------------------------------------------------------
+///------------------------------------Meta Activity Collection------------------------------------------------
+///--------------------------------------------------------------------------------------------------------
+
+// AddNewElementMetaActivity is the resolver for the AddNewElement_Meta_Activity field.
+func (r *mutationResolver) AddNewElementMetaActivity(ctx context.Context, input *model.NewCustomFieldElement) (*model.MetaActivityCollection, error) {
+	return metaActivityRepository.AddNewElement_Meta_Activity(ctx, input)
+}
+
+// ModifyElementMetaActivity is the resolver for the ModifyElement_Meta_Activity field.
+func (r *mutationResolver) ModifyElementMetaActivity(ctx context.Context, id *string, input *model.NewCustomFieldElement) (*model.MetaActivityCollection, error) {
+	return metaActivityRepository.ModifyElement_Meta_Activity(ctx, *id, input)
+}
+
+// DeleteElementMetaActivity is the resolver for the DeleteElement_Meta_Activity field.
+func (r *mutationResolver) DeleteElementMetaActivity(ctx context.Context, id *string) (string, error) {
+	return metaActivityRepository.DeleteElement_Meta_Activity(ctx, *id)
 }
 
 ///--------------------------------------------------------------------------------------------------------
@@ -123,6 +144,14 @@ func (r *mutationResolver) DeleUserRole(ctx context.Context, id *string) (string
 // GetUserMetaCollection is the resolver for the GetUserMetaCollection field.
 func (r *queryResolver) GetUserMetaCollection(ctx context.Context) (*model.MetaUserCollection, error) {
 	return userRepository.GetUser_MetaCollection(ctx)
+}
+
+///--------------------------------------------------------------------------------------------------------
+///------------------------------------ User Activity collection ----------------------------------------------
+///--------------------------------------------------------------------------------------------------------
+// GetMetaActivityCollection is the resolver for the GetMetaActivityCollection field.
+func (r *queryResolver) GetMetaActivityCollection(ctx context.Context) (*model.MetaActivityCollection, error) {
+	return metaActivityRepository.GetMetaActivityCollection(ctx)
 }
 
 ///--------------------------------------------------------------------------------------------------------

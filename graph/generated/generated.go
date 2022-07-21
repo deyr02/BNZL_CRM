@@ -44,6 +44,10 @@ type DirectiveRoot struct {
 }
 
 type ComplexityRoot struct {
+	Activity struct {
+		ActivityID func(childComplexity int) int
+	}
+
 	CustomFieldElement struct {
 		DataType       func(childComplexity int) int
 		DefaultValue   func(childComplexity int) int
@@ -65,29 +69,37 @@ type ComplexityRoot struct {
 		Value    func(childComplexity int) int
 	}
 
+	MetaActivityCollection struct {
+		Fields func(childComplexity int) int
+	}
+
 	MetaUserCollection struct {
 		Fields func(childComplexity int) int
 	}
 
 	Mutation struct {
-		AddNewElementMetaUser func(childComplexity int, input *model.NewCustomFieldElement) int
-		AddNewUser            func(childComplexity int, input *model.NewUser) int
-		AddNewUserRole        func(childComplexity int, input *model.NewUserRole) int
-		DeleUserRole          func(childComplexity int, id *string) int
-		DeleteElementMetaUser func(childComplexity int, id *string) int
-		DeleteUser            func(childComplexity int, id *string) int
-		Login                 func(childComplexity int, input *model.Login) int
-		ModifyElementMetaUser func(childComplexity int, id *string, input *model.NewCustomFieldElement) int
-		ModifyUser            func(childComplexity int, id *string, input *model.NewUser) int
-		ModifyUserRole        func(childComplexity int, id *string, input *model.NewUserRole) int
+		AddNewElementMetaActivity func(childComplexity int, input *model.NewCustomFieldElement) int
+		AddNewElementMetaUser     func(childComplexity int, input *model.NewCustomFieldElement) int
+		AddNewUser                func(childComplexity int, input *model.NewUser) int
+		AddNewUserRole            func(childComplexity int, input *model.NewUserRole) int
+		DeleUserRole              func(childComplexity int, id *string) int
+		DeleteElementMetaActivity func(childComplexity int, id *string) int
+		DeleteElementMetaUser     func(childComplexity int, id *string) int
+		DeleteUser                func(childComplexity int, id *string) int
+		Login                     func(childComplexity int, input *model.Login) int
+		ModifyElementMetaActivity func(childComplexity int, id *string, input *model.NewCustomFieldElement) int
+		ModifyElementMetaUser     func(childComplexity int, id *string, input *model.NewCustomFieldElement) int
+		ModifyUser                func(childComplexity int, id *string, input *model.NewUser) int
+		ModifyUserRole            func(childComplexity int, id *string, input *model.NewUserRole) int
 	}
 
 	Query struct {
-		GetAllUser            func(childComplexity int) int
-		GetAllUserRole        func(childComplexity int) int
-		GetUserByID           func(childComplexity int, id *string) int
-		GetUserMetaCollection func(childComplexity int) int
-		GetUserRoleByID       func(childComplexity int, id *string) int
+		GetAllUser                func(childComplexity int) int
+		GetAllUserRole            func(childComplexity int) int
+		GetMetaActivityCollection func(childComplexity int) int
+		GetUserByID               func(childComplexity int, id *string) int
+		GetUserMetaCollection     func(childComplexity int) int
+		GetUserRoleByID           func(childComplexity int, id *string) int
 	}
 
 	TokenServiceDto struct {
@@ -135,6 +147,9 @@ type MutationResolver interface {
 	AddNewElementMetaUser(ctx context.Context, input *model.NewCustomFieldElement) (*model.MetaUserCollection, error)
 	ModifyElementMetaUser(ctx context.Context, id *string, input *model.NewCustomFieldElement) (*model.MetaUserCollection, error)
 	DeleteElementMetaUser(ctx context.Context, id *string) (*model.MetaUserCollection, error)
+	AddNewElementMetaActivity(ctx context.Context, input *model.NewCustomFieldElement) (*model.MetaActivityCollection, error)
+	ModifyElementMetaActivity(ctx context.Context, id *string, input *model.NewCustomFieldElement) (*model.MetaActivityCollection, error)
+	DeleteElementMetaActivity(ctx context.Context, id *string) (string, error)
 	AddNewUser(ctx context.Context, input *model.NewUser) (*model.User, error)
 	DeleteUser(ctx context.Context, id *string) (string, error)
 	ModifyUser(ctx context.Context, id *string, input *model.NewUser) (*model.User, error)
@@ -145,6 +160,7 @@ type MutationResolver interface {
 }
 type QueryResolver interface {
 	GetUserMetaCollection(ctx context.Context) (*model.MetaUserCollection, error)
+	GetMetaActivityCollection(ctx context.Context) (*model.MetaActivityCollection, error)
 	GetAllUserRole(ctx context.Context) ([]*model.UserRole, error)
 	GetUserRoleByID(ctx context.Context, id *string) (*model.UserRole, error)
 	GetAllUser(ctx context.Context) ([]*model.User, error)
@@ -165,6 +181,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 	ec := executionContext{nil, e}
 	_ = ec
 	switch typeName + "." + field {
+
+	case "Activity.ActivityID":
+		if e.complexity.Activity.ActivityID == nil {
+			break
+		}
+
+		return e.complexity.Activity.ActivityID(childComplexity), true
 
 	case "CustomFieldElement.DataType":
 		if e.complexity.CustomFieldElement.DataType == nil {
@@ -271,12 +294,31 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.ElementValue.Value(childComplexity), true
 
+	case "MetaActivityCollection.Fields":
+		if e.complexity.MetaActivityCollection.Fields == nil {
+			break
+		}
+
+		return e.complexity.MetaActivityCollection.Fields(childComplexity), true
+
 	case "MetaUserCollection.Fields":
 		if e.complexity.MetaUserCollection.Fields == nil {
 			break
 		}
 
 		return e.complexity.MetaUserCollection.Fields(childComplexity), true
+
+	case "Mutation.AddNewElement_Meta_Activity":
+		if e.complexity.Mutation.AddNewElementMetaActivity == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_AddNewElement_Meta_Activity_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.AddNewElementMetaActivity(childComplexity, args["input"].(*model.NewCustomFieldElement)), true
 
 	case "Mutation.AddNewElement_Meta_User":
 		if e.complexity.Mutation.AddNewElementMetaUser == nil {
@@ -326,6 +368,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.DeleUserRole(childComplexity, args["_id"].(*string)), true
 
+	case "Mutation.DeleteElement_Meta_Activity":
+		if e.complexity.Mutation.DeleteElementMetaActivity == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_DeleteElement_Meta_Activity_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.DeleteElementMetaActivity(childComplexity, args["_id"].(*string)), true
+
 	case "Mutation.DeleteElement_Meta_user":
 		if e.complexity.Mutation.DeleteElementMetaUser == nil {
 			break
@@ -361,6 +415,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.Login(childComplexity, args["input"].(*model.Login)), true
+
+	case "Mutation.ModifyElement_Meta_Activity":
+		if e.complexity.Mutation.ModifyElementMetaActivity == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_ModifyElement_Meta_Activity_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.ModifyElementMetaActivity(childComplexity, args["_id"].(*string), args["input"].(*model.NewCustomFieldElement)), true
 
 	case "Mutation.ModifyElement_Meta_user":
 		if e.complexity.Mutation.ModifyElementMetaUser == nil {
@@ -411,6 +477,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.GetAllUserRole(childComplexity), true
+
+	case "Query.GetMetaActivityCollection":
+		if e.complexity.Query.GetMetaActivityCollection == nil {
+			break
+		}
+
+		return e.complexity.Query.GetMetaActivityCollection(childComplexity), true
 
 	case "Query.GetUserByID":
 		if e.complexity.Query.GetUserByID == nil {
@@ -778,6 +851,9 @@ type MetaUserCollection{
     Fields: [CustomFieldElement!]!
 }
 
+type MetaActivityCollection{				
+    Fields: [CustomFieldElement!]!
+}
 
 
 
@@ -873,11 +949,30 @@ type TokenServiceDto{
 }
 
 
+#------------------------------------------
+#--------- Activity --------------------------
+#------------------------------------------
+
+
+type Activity {
+  ActivityID: ID!
+
+}
+
+
+
+
+
+
 
 
 type Query{
 
+  ##------Meta User------------
   GetUserMetaCollection: MetaUserCollection!
+  ##------MetaActivity---------
+  GetMetaActivityCollection: MetaActivityCollection
+
 
   ##UserRole
   GetAllUserRole: [UserRole!]
@@ -888,11 +983,6 @@ type Query{
   GetUserByID(_id:String): User!
  # GetUserByUserName (_userName: String): User!
 
-  # table(_id: String!): Table!
-  # tables: [Table!]!
-  # GetAllData(_collectionName: String!):[String]!
-  # getData(_collectionName: String!, Query: String!): [String]!
-  # getAllDatabyCollectionName(_collectionName: String!):[Record]!
 
 }
 
@@ -903,31 +993,30 @@ type Mutation{
   ModifyElement_Meta_user(_id:String, input:NewCustomFieldElement):MetaUserCollection!
   DeleteElement_Meta_user(_id:String):MetaUserCollection!
 
-  #-------Meta-user Collection---------------
+#---------Meta Activity Collection------------
+  AddNewElement_Meta_Activity(input:NewCustomFieldElement): MetaActivityCollection!
+  ModifyElement_Meta_Activity(_id:String, input:NewCustomFieldElement):MetaActivityCollection!
+  DeleteElement_Meta_Activity(_id:String):String!
+
+
+  #--------userCollection----------------------
   AddNewUser(input:NewUser): User!
   DeleteUser(_id:String): String!
   ModifyUser(_id:String, input:NewUser): User!
   Login(input:Login): UserDTO!
+  ##-- the following methods need to be added later
   #AssignRole(_userID: string, _roleID String): User!
   #UpdatePassword(_id:string, password String): string
   #LockUser(_id:string): Boolean
+  #RefreshToken(): UserDto
   
-    #-------UserRole---------------
-  
+  #-------UserRole-------------------------------
   AddNewUserRole(input:NewUserRole): UserRole!
   ModifyUserRole(_id:String, input:NewUserRole): UserRole
   DeleUserRole(_id:String):String!
 
 
-  # createTable(input: NewTable!): Table!
-  # DeleteTable(_id: String!):Table!
-  # addColumn(_id:String!, input:NewCustomField!): Table!
-  # DeleteColumn(_tableid: String!, _columnid:String!): Table!
-  # ModifyColumn(_tableid: String!, _columnid: String!, input:NewCustomField!): Table!
 
-  # AddData(_collectionName: String!, data: String!):String
-
-  # SaveData(_collectionName:String!, input: NewRecord): Record
 }`, BuiltIn: false},
 }
 var parsedSchema = gqlparser.MustLoadSchema(sources...)
@@ -935,6 +1024,21 @@ var parsedSchema = gqlparser.MustLoadSchema(sources...)
 // endregion ************************** generated!.gotpl **************************
 
 // region    ***************************** args.gotpl *****************************
+
+func (ec *executionContext) field_Mutation_AddNewElement_Meta_Activity_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *model.NewCustomFieldElement
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalONewCustomFieldElement2ᚖgithubᚗcomᚋdeyr02ᚋbnzlcrmᚋgraphᚋmodelᚐNewCustomFieldElement(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
 
 func (ec *executionContext) field_Mutation_AddNewElement_Meta_User_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
@@ -996,6 +1100,21 @@ func (ec *executionContext) field_Mutation_DeleUserRole_args(ctx context.Context
 	return args, nil
 }
 
+func (ec *executionContext) field_Mutation_DeleteElement_Meta_Activity_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *string
+	if tmp, ok := rawArgs["_id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("_id"))
+		arg0, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["_id"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Mutation_DeleteElement_Meta_user_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -1038,6 +1157,30 @@ func (ec *executionContext) field_Mutation_Login_args(ctx context.Context, rawAr
 		}
 	}
 	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_ModifyElement_Meta_Activity_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *string
+	if tmp, ok := rawArgs["_id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("_id"))
+		arg0, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["_id"] = arg0
+	var arg1 *model.NewCustomFieldElement
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg1, err = ec.unmarshalONewCustomFieldElement2ᚖgithubᚗcomᚋdeyr02ᚋbnzlcrmᚋgraphᚋmodelᚐNewCustomFieldElement(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg1
 	return args, nil
 }
 
@@ -1195,6 +1338,50 @@ func (ec *executionContext) field___Type_fields_args(ctx context.Context, rawArg
 // endregion ************************** directives.gotpl **************************
 
 // region    **************************** field.gotpl *****************************
+
+func (ec *executionContext) _Activity_ActivityID(ctx context.Context, field graphql.CollectedField, obj *model.Activity) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Activity_ActivityID(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ActivityID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNID2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Activity_ActivityID(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Activity",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type ID does not have child fields")
+		},
+	}
+	return fc, nil
+}
 
 func (ec *executionContext) _CustomFieldElement_FieldID(ctx context.Context, field graphql.CollectedField, obj *model.CustomFieldElement) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_CustomFieldElement_FieldID(ctx, field)
@@ -1847,6 +2034,76 @@ func (ec *executionContext) fieldContext_ElementValue_value(ctx context.Context,
 	return fc, nil
 }
 
+func (ec *executionContext) _MetaActivityCollection_Fields(ctx context.Context, field graphql.CollectedField, obj *model.MetaActivityCollection) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_MetaActivityCollection_Fields(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Fields, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*model.CustomFieldElement)
+	fc.Result = res
+	return ec.marshalNCustomFieldElement2ᚕᚖgithubᚗcomᚋdeyr02ᚋbnzlcrmᚋgraphᚋmodelᚐCustomFieldElementᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_MetaActivityCollection_Fields(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "MetaActivityCollection",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "FieldID":
+				return ec.fieldContext_CustomFieldElement_FieldID(ctx, field)
+			case "FieldName":
+				return ec.fieldContext_CustomFieldElement_FieldName(ctx, field)
+			case "DataType":
+				return ec.fieldContext_CustomFieldElement_DataType(ctx, field)
+			case "FieldType":
+				return ec.fieldContext_CustomFieldElement_FieldType(ctx, field)
+			case "IsRequired":
+				return ec.fieldContext_CustomFieldElement_IsRequired(ctx, field)
+			case "Visibility":
+				return ec.fieldContext_CustomFieldElement_Visibility(ctx, field)
+			case "SystemFieled":
+				return ec.fieldContext_CustomFieldElement_SystemFieled(ctx, field)
+			case "MaxValue":
+				return ec.fieldContext_CustomFieldElement_MaxValue(ctx, field)
+			case "MinValue":
+				return ec.fieldContext_CustomFieldElement_MinValue(ctx, field)
+			case "DefaultValue":
+				return ec.fieldContext_CustomFieldElement_DefaultValue(ctx, field)
+			case "PossibleValues":
+				return ec.fieldContext_CustomFieldElement_PossibleValues(ctx, field)
+			case "FieldOrder":
+				return ec.fieldContext_CustomFieldElement_FieldOrder(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type CustomFieldElement", field.Name)
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _MetaUserCollection_Fields(ctx context.Context, field graphql.CollectedField, obj *model.MetaUserCollection) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_MetaUserCollection_Fields(ctx, field)
 	if err != nil {
@@ -2088,6 +2345,179 @@ func (ec *executionContext) fieldContext_Mutation_DeleteElement_Meta_user(ctx co
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Mutation_DeleteElement_Meta_user_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_AddNewElement_Meta_Activity(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_AddNewElement_Meta_Activity(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().AddNewElementMetaActivity(rctx, fc.Args["input"].(*model.NewCustomFieldElement))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.MetaActivityCollection)
+	fc.Result = res
+	return ec.marshalNMetaActivityCollection2ᚖgithubᚗcomᚋdeyr02ᚋbnzlcrmᚋgraphᚋmodelᚐMetaActivityCollection(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_AddNewElement_Meta_Activity(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "Fields":
+				return ec.fieldContext_MetaActivityCollection_Fields(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type MetaActivityCollection", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_AddNewElement_Meta_Activity_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_ModifyElement_Meta_Activity(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_ModifyElement_Meta_Activity(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().ModifyElementMetaActivity(rctx, fc.Args["_id"].(*string), fc.Args["input"].(*model.NewCustomFieldElement))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.MetaActivityCollection)
+	fc.Result = res
+	return ec.marshalNMetaActivityCollection2ᚖgithubᚗcomᚋdeyr02ᚋbnzlcrmᚋgraphᚋmodelᚐMetaActivityCollection(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_ModifyElement_Meta_Activity(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "Fields":
+				return ec.fieldContext_MetaActivityCollection_Fields(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type MetaActivityCollection", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_ModifyElement_Meta_Activity_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_DeleteElement_Meta_Activity(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_DeleteElement_Meta_Activity(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().DeleteElementMetaActivity(rctx, fc.Args["_id"].(*string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_DeleteElement_Meta_Activity(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_DeleteElement_Meta_Activity_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return
 	}
@@ -2603,6 +3033,51 @@ func (ec *executionContext) fieldContext_Query_GetUserMetaCollection(ctx context
 				return ec.fieldContext_MetaUserCollection_Fields(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type MetaUserCollection", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Query_GetMetaActivityCollection(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_GetMetaActivityCollection(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().GetMetaActivityCollection(rctx)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.MetaActivityCollection)
+	fc.Result = res
+	return ec.marshalOMetaActivityCollection2ᚖgithubᚗcomᚋdeyr02ᚋbnzlcrmᚋgraphᚋmodelᚐMetaActivityCollection(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Query_GetMetaActivityCollection(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "Fields":
+				return ec.fieldContext_MetaActivityCollection_Fields(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type MetaActivityCollection", field.Name)
 		},
 	}
 	return fc, nil
@@ -6230,6 +6705,34 @@ func (ec *executionContext) unmarshalInputNewUserRole(ctx context.Context, obj i
 
 // region    **************************** object.gotpl ****************************
 
+var activityImplementors = []string{"Activity"}
+
+func (ec *executionContext) _Activity(ctx context.Context, sel ast.SelectionSet, obj *model.Activity) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, activityImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("Activity")
+		case "ActivityID":
+
+			out.Values[i] = ec._Activity_ActivityID(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var customFieldElementImplementors = []string{"CustomFieldElement"}
 
 func (ec *executionContext) _CustomFieldElement(ctx context.Context, sel ast.SelectionSet, obj *model.CustomFieldElement) graphql.Marshaler {
@@ -6368,6 +6871,34 @@ func (ec *executionContext) _ElementValue(ctx context.Context, sel ast.Selection
 	return out
 }
 
+var metaActivityCollectionImplementors = []string{"MetaActivityCollection"}
+
+func (ec *executionContext) _MetaActivityCollection(ctx context.Context, sel ast.SelectionSet, obj *model.MetaActivityCollection) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, metaActivityCollectionImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("MetaActivityCollection")
+		case "Fields":
+
+			out.Values[i] = ec._MetaActivityCollection_Fields(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var metaUserCollectionImplementors = []string{"MetaUserCollection"}
 
 func (ec *executionContext) _MetaUserCollection(ctx context.Context, sel ast.SelectionSet, obj *model.MetaUserCollection) graphql.Marshaler {
@@ -6437,6 +6968,33 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_DeleteElement_Meta_user(ctx, field)
+			})
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "AddNewElement_Meta_Activity":
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_AddNewElement_Meta_Activity(ctx, field)
+			})
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "ModifyElement_Meta_Activity":
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_ModifyElement_Meta_Activity(ctx, field)
+			})
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "DeleteElement_Meta_Activity":
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_DeleteElement_Meta_Activity(ctx, field)
 			})
 
 			if out.Values[i] == graphql.Null {
@@ -6545,6 +7103,26 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
+			})
+		case "GetMetaActivityCollection":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_GetMetaActivityCollection(ctx, field)
 				return res
 			}
 
@@ -7438,6 +8016,20 @@ func (ec *executionContext) marshalNInt2int(ctx context.Context, sel ast.Selecti
 	return res
 }
 
+func (ec *executionContext) marshalNMetaActivityCollection2githubᚗcomᚋdeyr02ᚋbnzlcrmᚋgraphᚋmodelᚐMetaActivityCollection(ctx context.Context, sel ast.SelectionSet, v model.MetaActivityCollection) graphql.Marshaler {
+	return ec._MetaActivityCollection(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNMetaActivityCollection2ᚖgithubᚗcomᚋdeyr02ᚋbnzlcrmᚋgraphᚋmodelᚐMetaActivityCollection(ctx context.Context, sel ast.SelectionSet, v *model.MetaActivityCollection) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._MetaActivityCollection(ctx, sel, v)
+}
+
 func (ec *executionContext) marshalNMetaUserCollection2githubᚗcomᚋdeyr02ᚋbnzlcrmᚋgraphᚋmodelᚐMetaUserCollection(ctx context.Context, sel ast.SelectionSet, v model.MetaUserCollection) graphql.Marshaler {
 	return ec._MetaUserCollection(ctx, sel, &v)
 }
@@ -7979,6 +8571,13 @@ func (ec *executionContext) unmarshalOLogin2ᚖgithubᚗcomᚋdeyr02ᚋbnzlcrm�
 	}
 	res, err := ec.unmarshalInputLogin(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOMetaActivityCollection2ᚖgithubᚗcomᚋdeyr02ᚋbnzlcrmᚋgraphᚋmodelᚐMetaActivityCollection(ctx context.Context, sel ast.SelectionSet, v *model.MetaActivityCollection) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._MetaActivityCollection(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalONewCustomFieldElement2ᚕᚖgithubᚗcomᚋdeyr02ᚋbnzlcrmᚋgraphᚋmodelᚐNewCustomFieldElement(ctx context.Context, v interface{}) ([]*model.NewCustomFieldElement, error) {

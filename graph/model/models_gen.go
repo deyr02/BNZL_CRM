@@ -8,6 +8,10 @@ import (
 	"strconv"
 )
 
+type Activity struct {
+	ActivityID string `json:"ActivityID"`
+}
+
 type CustomFieldElement struct {
 	FieldID        string    `json:"FieldID"`
 	FieldName      string    `json:"FieldName"`
@@ -32,6 +36,10 @@ type ElementValue struct {
 type Login struct {
 	UserName string `json:"UserName"`
 	Password string `json:"Password"`
+}
+
+type MetaActivityCollection struct {
+	Fields []*CustomFieldElement `json:"Fields"`
 }
 
 type MetaUserCollection struct {

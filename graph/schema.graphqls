@@ -228,10 +228,7 @@ type Mutation{
 #---------Meta Activity Collection------------
   AddNewElement_Meta_Activity(input:NewCustomFieldElement): MetaActivityCollection!
   ModifyElement_Meta_Activity(_id:String, input:NewCustomFieldElement):MetaActivityCollection!
-  DeleteElement_Meta_Activity(_id:String):MetaActivityCollection!
-
-
-
+  DeleteElement_Meta_Activity(_id:String):String!
 
 
   #--------userCollection----------------------
@@ -246,7 +243,6 @@ type Mutation{
   #RefreshToken(): UserDto
   
   #-------UserRole-------------------------------
-  
   AddNewUserRole(input:NewUserRole): UserRole!
   ModifyUserRole(_id:String, input:NewUserRole): UserRole
   DeleUserRole(_id:String):String!
