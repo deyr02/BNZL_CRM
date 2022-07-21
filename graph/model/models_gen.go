@@ -9,7 +9,13 @@ import (
 )
 
 type Activity struct {
-	ActivityID string `json:"ActivityID"`
+	ActivityID string          `json:"ActivityID"`
+	CreatedAt  *string         `json:"CreatedAT"`
+	UpdatedAt  *string         `json:"UpdatedAT"`
+	DeletedAt  *string         `json:"DeletedAT"`
+	CreatedBy  *string         `json:"CreatedBy"`
+	ModifiedBy *string         `json:"ModifiedBy"`
+	Properties []*ElementValue `json:"Properties"`
 }
 
 type CustomFieldElement struct {
@@ -44,6 +50,10 @@ type MetaActivityCollection struct {
 
 type MetaUserCollection struct {
 	Fields []*CustomFieldElement `json:"Fields"`
+}
+
+type NewActivity struct {
+	Properties []*NewElementValue `json:"Properties"`
 }
 
 type NewCollection struct {

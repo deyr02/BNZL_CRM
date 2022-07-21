@@ -185,10 +185,21 @@ type TokenServiceDto{
 #--------- Activity --------------------------
 #------------------------------------------
 
-
 type Activity {
   ActivityID: ID!
 
+  CreatedAT: Date
+  UpdatedAT: Date
+  DeletedAT: Date
+
+  CreatedBy: ID
+  ModifiedBy: ID
+
+  Properties: [ElementValue!]!
+}
+
+input NewActivity{
+  Properties:[NewElementValue!]!
 }
 
 
@@ -215,6 +226,10 @@ type Query{
   GetUserByID(_id:String): User!
  # GetUserByUserName (_userName: String): User!
 
+
+## --------Activity--------------
+GetAllActivity: [Activity!]!
+GetActivityByID(_id:String): Activity!
 
 }
 
@@ -247,6 +262,9 @@ type Mutation{
   ModifyUserRole(_id:String, input:NewUserRole): UserRole
   DeleUserRole(_id:String):String!
 
-
+  #-------Activity-------------------------------
+  AddNewActivity(input:NewActivity): Activity!
+  ModifyActivity(_id:String, input:NewActivity): Activity!
+  DeleteActivity(_id: String): String!
 
 }

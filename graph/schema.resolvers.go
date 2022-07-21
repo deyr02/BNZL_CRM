@@ -8,6 +8,7 @@ import (
 
 	"github.com/deyr02/bnzlcrm/graph/generated"
 	"github.com/deyr02/bnzlcrm/graph/model"
+	"github.com/deyr02/bnzlcrm/repositories/activity/activityCollection"
 	metaactivity "github.com/deyr02/bnzlcrm/repositories/activity/metaActivity"
 	"github.com/deyr02/bnzlcrm/repositories/database"
 	"github.com/deyr02/bnzlcrm/repositories/user/userCollection"
@@ -33,6 +34,7 @@ var userRepository user.User_Meta_Repository = user.New_User_Meta_repository(cli
 var UserRoleRepository userrole.User_Role_Repository = userrole.New_User_Role_repository(client)
 var userCollectionRepository userCollection.User_Repository = userCollection.New_User_Repository(client)
 var metaActivityRepository metaactivity.Meta_Activity_Repository = metaactivity.New_Meta_Activity_Repository(client)
+var activityRepository activityCollection.Activity_Repository = activityCollection.New_Activity_Repository(client)
 
 ///--------------------------------------------------------------------------------------------------------
 ///--------------------------------------------------------------------------------------------------------
@@ -127,6 +129,41 @@ func (r *mutationResolver) DeleUserRole(ctx context.Context, id *string) (string
 }
 
 ///--------------------------------------------------------------------------------------------------------
+///------------------------------------ Activity collection ----------------------------------------------
+///--------------------------------------------------------------------------------------------------------
+// AddNewActivity is the resolver for the AddNewActivity field.
+func (r *mutationResolver) AddNewActivity(ctx context.Context, input *model.NewActivity) (*model.Activity, error) {
+	return activityRepository.AddNewActivity(ctx, input)
+}
+
+// ModifyActivity is the resolver for the ModifyActivity field.
+func (r *mutationResolver) ModifyActivity(ctx context.Context, id *string, input *model.NewActivity) (*model.Activity, error) {
+	return activityRepository.ModifyActivity(ctx, *id, input)
+}
+
+// DeleteActivity is the resolver for the DeleteActivity field.
+func (r *mutationResolver) DeleteActivity(ctx context.Context, id *string) (string, error) {
+	return activityRepository.DeleteActivity(ctx, *id)
+}
+
+///
+///
+///
+///
+///
+///
+///
+///
+///
+///
+///
+///
+///
+///
+///
+///
+///
+///--------------------------------------------------------------------------------------------------------
 ///--------------------------------------------------------------------------------------------------------
 ///--------------------------------------------------------------------------------------------------------
 ///--------------------------------------------------------------------------------------------------------
@@ -178,6 +215,19 @@ func (r *queryResolver) GetAllUser(ctx context.Context) ([]*model.User, error) {
 // GetUserByID is the resolver for the GetUserByID field.
 func (r *queryResolver) GetUserByID(ctx context.Context, id *string) (*model.User, error) {
 	return userCollectionRepository.GetUserByID(ctx, *id)
+}
+
+///--------------------------------------------------------------------------------------------------------
+///------------------------------------ Activity Collection ----------------------------------------------
+///--------------------------------------------------------------------------------------------------------
+// GetAllActivity is the resolver for the GetAllActivity field.
+func (r *queryResolver) GetAllActivity(ctx context.Context) ([]*model.Activity, error) {
+	return activityRepository.GetAllActivity(ctx)
+}
+
+// GetActivityByID is the resolver for the GetActivityByID field.
+func (r *queryResolver) GetActivityByID(ctx context.Context, id *string) (*model.Activity, error) {
+	return activityRepository.GetActivityByID(ctx, *id)
 }
 
 // Mutation returns generated.MutationResolver implementation.
