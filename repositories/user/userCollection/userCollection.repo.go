@@ -5,11 +5,10 @@ import (
 
 	"time"
 
-	"github.com/deyr02/bnzlcrm/auth"
 	"github.com/deyr02/bnzlcrm/graph/model"
+	"github.com/deyr02/bnzlcrm/jwt"
 	customerror "github.com/deyr02/bnzlcrm/repositories/customError"
 	"github.com/deyr02/bnzlcrm/repositories/database"
-	userrole "github.com/deyr02/bnzlcrm/repositories/userRole"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"golang.org/x/crypto/bcrypt"
@@ -35,7 +34,7 @@ type User_Repository interface {
 func New_User_Repository(client *mongo.Client) User_Repository {
 	_client := client
 	collection := _client.Database(database.DATABASE_NAME).Collection(USER_COLLECTION)
-	_count, _ := collection.CountDocuments(nil, bson.D{})
+	_count, _ := collection.CountDocuments(context.TODO(), bson.D{})
 
 	if _count == 0 {
 		_hashPassword, _ := HashPassword(adminUser.Password)
@@ -65,7 +64,7 @@ func New_User_Repository(client *mongo.Client) User_Repository {
 			CreatedAt:  &_time,
 			Properties: _properties,
 		}
-		collection.InsertOne(nil, &adminuser)
+		collection.InsertOne(context.TODO(), &adminuser)
 	}
 
 	return &Database{
@@ -270,7 +269,7 @@ func (db *Database) Login(ctx context.Context, input *model.Login) (*model.UserD
 		RoleID:     user.RoleID,
 		ExpiryDate: time.Now().Add(time.Hour * 24).String(),
 	}
-	token, erro := auth.GenerateToken(tokenServiceDto)
+	token, erro := jwt.GenerateToken(tokenServiceDto)
 
 	if erro != nil {
 		return nil, erro
@@ -294,50 +293,4 @@ func HashPassword(password string) (string, error) {
 func CheckPasswordHash(password, hash string) bool {
 	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
 	return err == nil
-}
-
-type UserAuthRepository interface {
-	GetUserByUserName(username string) (*model.User, error)
-	IsUserAuthorized(roleid string, operation *model.Operation) bool
-}
-
-func NewUserAuthRepository() UserAuthRepository {
-	_client := database.CreateConnection()
-	return &Database{
-		client: _client,
-	}
-}
-
-func (db *Database) GetUserByUserName(username string) (*model.User, error) {
-	collection := db.client.Database(database.DATABASE_NAME).Collection(USER_COLLECTION)
-	cursor := collection.FindOne(nil, bson.D{{Key: "username", Value: username}})
-	var user *model.User
-	err := cursor.Decode(&user)
-	if err != nil {
-		return nil, &customerror.NoRecordFound{}
-	}
-	return user, nil
-}
-
-func (db *Database) IsUserAuthorized(roleid string, operation *model.Operation) bool {
-	collection := db.client.Database(database.DATABASE_NAME).Collection(userrole.USER_ROLE)
-	cursor := collection.FindOne(nil, bson.D{{Key: "roleid", Value: roleid}})
-	var userrole *model.UserRole
-	err := cursor.Decode(&userrole)
-	if err != nil {
-		return false
-	}
-	if userrole == nil {
-		return false
-	}
-	if userrole.RoleName == "Admin" {
-		return true
-	} else {
-		for _, ele := range userrole.Operations {
-			if ele == *operation {
-				return true
-			}
-		}
-		return false
-	}
 }

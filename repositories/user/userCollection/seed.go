@@ -10,17 +10,17 @@ var adminUser = &model.NewUser{
 	Email:    "admin@bnzl.com",
 	Password: "Password",
 	Properties: []*model.NewElementValue{
-		&model.NewElementValue{
+		{
 			Key:      "FirstName",
 			DataType: model.DataTypeString,
 			Value:    "Admin",
 		},
-		&model.NewElementValue{
+		{
 			Key:      "LastName",
 			DataType: model.DataTypeString,
 			Value:    "Admin",
 		},
-		&model.NewElementValue{
+		{
 			Key:      "email",
 			DataType: model.DataTypeString,
 			Value:    "admin@bnzl.com",
