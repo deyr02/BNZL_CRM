@@ -55,6 +55,14 @@ func main() {
 	user.POST("/modifyuser", http.ModifyUser())
 	user.POST("/deleteuser", http.DeleteUser())
 
+	metauser := server.Group("userform")
+	metauser.Use(auth.AuthMiddleware())
+	metauser.GET("/metauser", http.GetAllMetaUserField())
+	metauser.GET("/metauserformfield", http.GetMetaUserFieldByID())
+	metauser.POST("/addnewfield", http.AddNewMetaUserField())
+	metauser.POST("/modifyfield", http.ModifyMetaUserField())
+	metauser.POST("/deletefield", http.DeleteMetaUserField())
+
 	activity := server.Group("activity")
 	activity.Use(auth.AuthMiddleware())
 	activity.GET("/getallactivities", http.GetAllActivityHandler())
