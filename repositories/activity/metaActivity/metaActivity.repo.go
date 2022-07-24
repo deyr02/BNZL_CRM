@@ -170,13 +170,20 @@ func (db *Database) DeleteElement_Meta_Activity(ctx context.Context, _id string)
 
 	//check for duplicate fieldName
 	var _fields []*model.CustomFieldElement
+	isFieldExist := false
 	for _, element := range meta_activity.Fields {
+		if element.FieldID == _id {
+			isFieldExist = true
+		}
 		if element.FieldID == _id && element.SystemFieled {
 			return "", &customerror.SystemField{}
 		}
 		if element.FieldID != _id {
 			_fields = append(_fields, element)
 		}
+	}
+	if !isFieldExist {
+		return "", &customerror.NoRecordFound{}
 	}
 	meta_activity.Fields = _fields
 	//updating field

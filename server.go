@@ -36,19 +36,32 @@ func main() {
 	server := gin.Default()
 	server.Use(auth.CORSMiddleware())
 
+	//
+	//
+	//---------------------Account--------------------------------
+	//
+	//
 	account := server.Group("account")
 	account.POST("/login", http.LoginHandler())
-
+	//
+	//
+	//---------------------UserRole--------------------------------
+	//
+	//
 	userRole := server.Group("userrole")
-	userRole.Use(auth.AuthMiddleware())
+	userRole.Use(auth.AuthAdminMiddleware())
 	userRole.GET("/getalluserrole", http.GetAllUserRoleHandler())
 	userRole.GET("/getuserrole", http.GetUserRoleByID())
 	userRole.POST("/", http.AddNewUserRole())
 	userRole.POST("/modifyuserrole", http.ModifyUserRole())
 	userRole.POST("/deleteuserrole", http.DeleteUserRole())
-
+	//
+	//
+	//---------------------User--------------------------------
+	//
+	//
 	user := server.Group("user")
-	user.Use(auth.AuthMiddleware())
+	user.Use(auth.AuthAdminMiddleware())
 	user.GET("/getalluser", http.GetAllUserHandler())
 	user.GET("/getuser", http.GetUserByID())
 	user.POST("/", http.AddNewUser())
@@ -56,13 +69,16 @@ func main() {
 	user.POST("/deleteuser", http.DeleteUser())
 
 	metauser := server.Group("userform")
-	metauser.Use(auth.AuthMiddleware())
+	metauser.Use(auth.AuthAdminMiddleware())
 	metauser.GET("/metauser", http.GetAllMetaUserField())
-	metauser.GET("/metauserformfield", http.GetMetaUserFieldByID())
 	metauser.POST("/addnewfield", http.AddNewMetaUserField())
 	metauser.POST("/modifyfield", http.ModifyMetaUserField())
 	metauser.POST("/deletefield", http.DeleteMetaUserField())
-
+	//
+	//
+	//---------------------Activity--------------------------------
+	//
+	//
 	activity := server.Group("activity")
 	activity.Use(auth.AuthMiddleware())
 	activity.GET("/getallactivities", http.GetAllActivityHandler())
@@ -70,6 +86,13 @@ func main() {
 	activity.POST("/", http.AddNewActivity())
 	activity.POST("/modifyactivity", http.ModifyActivity())
 	activity.POST("/deleteactivity", http.DeleteActivity())
+
+	metaactivity := server.Group("activityform")
+	metaactivity.Use(auth.AuthAdminMiddleware())
+	metaactivity.GET("/metaactivity", http.GetAllMetaActivityField())
+	metaactivity.POST("/addnewfield", http.AddNewMetaActivityField())
+	metaactivity.POST("/modifyfield", http.ModifyMetaActivityField())
+	metaactivity.POST("/deletefield", http.DeleteMetaActivityField())
 
 	//user.Use(auth.AuthMiddleware())
 	server.Run(defaultPort)

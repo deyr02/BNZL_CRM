@@ -11,6 +11,12 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
+var userCtxKey = &contextKey{"username"}
+
+type contextKey struct {
+	name string
+}
+
 const (
 	ACTIVITY_COLLECTION = "activity"
 )

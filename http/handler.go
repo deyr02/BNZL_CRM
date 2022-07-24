@@ -212,15 +212,15 @@ func DeleteUser() gin.HandlerFunc {
 //----------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------------------
-//------------------------------------------ user ----------------------------------------
+//------------------------------------------meta user ----------------------------------------
 //----------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------------------
 
-func GetAllUserHandler() gin.HandlerFunc {
+func GetAllMetaUserField() gin.HandlerFunc {
 	h := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &graph.Resolver{}}))
 	return func(c *gin.Context) {
-		if !CheckRequest(c, "GetAllUser") {
+		if !CheckRequest(c, "GetUserMetaCollection") {
 			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 				"message": "Invalid Request",
 			})
@@ -230,10 +230,10 @@ func GetAllUserHandler() gin.HandlerFunc {
 	}
 }
 
-func GetUserByID() gin.HandlerFunc {
+func AddNewMetaUserField() gin.HandlerFunc {
 	h := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &graph.Resolver{}}))
 	return func(c *gin.Context) {
-		if !CheckRequest(c, "GetUserByID") {
+		if !CheckRequest(c, "AddNewElement_Meta_User") {
 			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 				"message": "Invalid Request",
 			})
@@ -243,10 +243,10 @@ func GetUserByID() gin.HandlerFunc {
 	}
 }
 
-func AddNewUser() gin.HandlerFunc {
+func ModifyMetaUserField() gin.HandlerFunc {
 	h := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &graph.Resolver{}}))
 	return func(c *gin.Context) {
-		if !CheckRequest(c, "AddNewUser") {
+		if !CheckRequest(c, "ModifyElement_Meta_user") {
 			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 				"message": "Invalid Request",
 			})
@@ -256,23 +256,10 @@ func AddNewUser() gin.HandlerFunc {
 	}
 }
 
-func ModifyUser() gin.HandlerFunc {
+func DeleteMetaUserField() gin.HandlerFunc {
 	h := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &graph.Resolver{}}))
 	return func(c *gin.Context) {
-		if !CheckRequest(c, "ModifyUser") {
-			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
-				"message": "Invalid Request",
-			})
-			return
-		}
-		h.ServeHTTP(c.Writer, c.Request)
-	}
-}
-
-func DeleteUser() gin.HandlerFunc {
-	h := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &graph.Resolver{}}))
-	return func(c *gin.Context) {
-		if !CheckRequest(c, "DeleteUser") {
+		if !CheckRequest(c, "DeleteElement_Meta_user") {
 			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 				"message": "Invalid Request",
 			})
@@ -346,6 +333,66 @@ func DeleteActivity() gin.HandlerFunc {
 	h := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &graph.Resolver{}}))
 	return func(c *gin.Context) {
 		if !CheckRequest(c, "DeleteActivity") {
+			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+				"message": "Invalid Request",
+			})
+			return
+		}
+		h.ServeHTTP(c.Writer, c.Request)
+	}
+}
+
+//----------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------
+//------------------------------------------meta Activity ----------------------------------------
+//----------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------
+
+func GetAllMetaActivityField() gin.HandlerFunc {
+	h := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &graph.Resolver{}}))
+	return func(c *gin.Context) {
+		if !CheckRequest(c, "GetMetaActivityCollection") {
+			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+				"message": "Invalid Request",
+			})
+			return
+		}
+		h.ServeHTTP(c.Writer, c.Request)
+	}
+}
+
+func AddNewMetaActivityField() gin.HandlerFunc {
+	h := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &graph.Resolver{}}))
+	return func(c *gin.Context) {
+		if !CheckRequest(c, "AddNewElement_Meta_Activity") {
+			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+				"message": "Invalid Request",
+			})
+			return
+		}
+		h.ServeHTTP(c.Writer, c.Request)
+	}
+}
+
+func ModifyMetaActivityField() gin.HandlerFunc {
+	h := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &graph.Resolver{}}))
+	return func(c *gin.Context) {
+		if !CheckRequest(c, "ModifyElement_Meta_Activity") {
+			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+				"message": "Invalid Request",
+			})
+			return
+		}
+		h.ServeHTTP(c.Writer, c.Request)
+	}
+}
+
+func DeleteMetaActivityField() gin.HandlerFunc {
+	h := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &graph.Resolver{}}))
+	return func(c *gin.Context) {
+		if !CheckRequest(c, "DeleteElement_Meta_Activity") {
 			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 				"message": "Invalid Request",
 			})

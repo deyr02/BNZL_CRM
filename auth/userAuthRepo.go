@@ -21,6 +21,7 @@ type Database struct {
 type UserAuthRepository interface {
 	GetUserByUserName(username string) (*model.User, error)
 	IsUserAuthorized(roleid string, operation *model.Operation) bool
+	IsAdmin(roleId string) bool
 }
 
 func NewUserAuthRepository() UserAuthRepository {
@@ -62,4 +63,21 @@ func (db *Database) IsUserAuthorized(roleid string, operation *model.Operation) 
 		}
 		return false
 	}
+}
+
+func (db *Database) IsAdmin(roleid string) bool {
+	collection := db.client.Database(database.DATABASE_NAME).Collection(userrole.USER_ROLE)
+	cursor := collection.FindOne(context.TODO(), bson.D{{Key: "roleid", Value: roleid}})
+	var userrole *model.UserRole
+	err := cursor.Decode(&userrole)
+	if err != nil {
+		return false
+	}
+	if userrole == nil {
+		return false
+	}
+	if userrole.RoleName == "Admin" {
+		return true
+	}
+	return false
 }
