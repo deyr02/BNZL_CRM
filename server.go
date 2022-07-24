@@ -11,6 +11,14 @@ import (
 //const defaultPort = "8090"
 const defaultPort = ":8090"
 
+// func playgroundHandler() gin.HandlerFunc {
+// 	//h := playground.Handler("GraphQL playground", "/query")
+// 	h := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &graph.Resolver{}}))
+// 	return func(c *gin.Context) {
+// 		h.ServeHTTP(c.Writer, c.Request)
+// 	}
+// }
+
 func main() {
 	port := os.Getenv("PORT")
 	if port == "" {
@@ -31,5 +39,30 @@ func main() {
 	account := server.Group("account")
 	account.POST("/login", http.LoginHandler())
 
+	userRole := server.Group("userrole")
+	userRole.Use(auth.AuthMiddleware())
+	userRole.GET("/getalluserrole", http.GetAllUserRoleHandler())
+	userRole.GET("/getuserrole", http.GetUserRoleByID())
+	userRole.POST("/", http.AddNewUserRole())
+	userRole.POST("/modifyuserrole", http.ModifyUserRole())
+	userRole.POST("/deleteuserrole", http.DeleteUserRole())
+
+	user := server.Group("user")
+	user.Use(auth.AuthMiddleware())
+	user.GET("/getalluser", http.GetAllUserHandler())
+	user.GET("/getuser", http.GetUserByID())
+	user.POST("/", http.AddNewUser())
+	user.POST("/modifyuser", http.ModifyUser())
+	user.POST("/deleteuser", http.DeleteUser())
+
+	activity := server.Group("activity")
+	activity.Use(auth.AuthMiddleware())
+	activity.GET("/getallactivities", http.GetAllActivityHandler())
+	activity.GET("/getactivity", http.GetActivityByID())
+	activity.POST("/", http.AddNewActivity())
+	activity.POST("/modifyactivity", http.ModifyActivity())
+	activity.POST("/deleteactivity", http.DeleteActivity())
+
+	//user.Use(auth.AuthMiddleware())
 	server.Run(defaultPort)
 }
