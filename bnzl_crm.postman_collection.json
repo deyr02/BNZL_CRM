@@ -1,97 +1,52 @@
 {
 	"info": {
-		"_postman_id": "57f1ef9c-a4c6-44aa-9a74-a6b1ea105f67",
+		"_postman_id": "923dbbd2-9064-44d5-a0ee-acf713318d81",
 		"name": "bnzl_crm",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "15757784"
+		"_exporter_id": "18757348"
 	},
 	"item": [
 		{
-			"name": "Activity",
+			"name": "Account",
 			"item": [
 				{
-					"name": "GetAllActivity",
-					"request": {
-						"method": "GET",
-						"header": []
-					},
-					"response": []
-				},
-				{
-					"name": "GetActivityByID",
-					"request": {
-						"method": "GET",
-						"header": []
-					},
-					"response": []
-				},
-				{
-					"name": "AddNewActivity",
+					"name": "Login as admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var res = pm.response.json();\r",
+									"pm.environment.set('token', res.data.Login.Token)\r",
+									"pm.globals.set(\"token\", res.data.Login.Token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"Title\": \"test Category\",\r\n    \"Sequence\": 9,\r\n    \"Customizable\": 1\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation Login{\r\n    Login(input:{UserName: \"bnzl_admin\", Password: \"Password\"}){\r\n        UserName\r\n        Token\r\n        Expiry\r\n    }\r\n}",
+								"variables": ""
 							}
 						},
 						"url": {
-							"raw": "{{url}}/activity_category/",
+							"raw": "{{url}}/account/login",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
-								"activity_category",
-								""
+								"account",
+								"login"
 							]
 						}
 					},
 					"response": []
 				},
-				{
-					"name": "Ediit Activity",
-					"request": {
-						"method": "GET",
-						"header": []
-					},
-					"response": []
-				},
-				{
-					"name": "Delete Activty",
-					"request": {
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"title\": \"\",\r\n    \"sequence\": 0,\r\n    \"customizable\": 0\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{url}}/activity_category/2",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"activity_category",
-								"2"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Account",
-			"item": [
 				{
 					"name": "Login",
 					"event": [
@@ -113,7 +68,7 @@
 						"body": {
 							"mode": "graphql",
 							"graphql": {
-								"query": "mutation Login{\r\n    Login(input:{UserName: \"bnzl_admin\", Password: \"Password\"}){\r\n        UserName\r\n        Token\r\n        Expiry\r\n    }\r\n}",
+								"query": "mutation Login{\r\n    Login(input:{UserName: \"rajib_dey123\", Password: \"P@ssw0rd\"}){\r\n        UserName\r\n        Token\r\n        Expiry\r\n    }\r\n}",
 								"variables": ""
 							}
 						},
@@ -334,7 +289,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{url}}/user/getuser?query=query GetUserById {\n  GetUserByID(_id:\"b19ef2c85fe448d1b37ef013866c4b7b\"){\n    UserID\n    UserName\n    Email\n    Properties{\n      key\n      value\n    }\n  }\n}",
+							"raw": "{{url}}/user/getuser?query=query GetUserById {\n  GetUserByID(_id:\"bc9a66c48a344d989de8c09c31734d80\"){\n    UserID\n    UserName\n    Email CreatedBy\n    Properties{\n      key\n      value\n    }\n  }\n}",
 							"host": [
 								"{{url}}"
 							],
@@ -345,12 +300,12 @@
 							"query": [
 								{
 									"key": "",
-									"value": null,
+									"value": "",
 									"disabled": true
 								},
 								{
 									"key": "query",
-									"value": "query GetUserById {\n  GetUserByID(_id:\"b19ef2c85fe448d1b37ef013866c4b7b\"){\n    UserID\n    UserName\n    Email\n    Properties{\n      key\n      value\n    }\n  }\n}"
+									"value": "query GetUserById {\n  GetUserByID(_id:\"bc9a66c48a344d989de8c09c31734d80\"){\n    UserID\n    UserName\n    Email CreatedBy\n    Properties{\n      key\n      value\n    }\n  }\n}"
 								}
 							]
 						}
@@ -371,7 +326,7 @@
 						"body": {
 							"mode": "graphql",
 							"graphql": {
-								"query": "\r\nmutation AddNewUser{\r\n  AddNewUser(input:{\r\n    RoleID:\"1111111111111111111\", \r\n  \tUserName:\"rajib_dey123\"\r\n    Email:\"rajib_dey123@bnzl.com\"\r\n    Password:\"P@ssw0rd\"\r\n    Properties:[\r\n      {\r\n        key:\"FirstName\"\r\n        DataType:String\r\n        value:\"Rajib\"\r\n      },\r\n      {\r\n        key:\"LastName\"\r\n        DataType:String\r\n        value:\"Dey\"\r\n      },\r\n      {\r\n        key:\"PhoneNumber\"\r\n        DataType:String\r\n        value:\"642102960832\"\r\n      },\r\n      \r\n    ]\r\n    \r\n  }){\r\n    UserID\r\n    RoleID\r\n    UserName\r\n    Email\r\n    Password\r\n    CreatedAT\r\n    ModifiedBy\r\n    IsActive\r\n    CreatedAT\r\n    UpdatedAT\r\n    DeletedAT\r\n    Properties{\r\n      key\r\n      value\r\n      DataType\r\n    }\r\n  }\r\n}\r\n\r\n",
+								"query": "\r\nmutation AddNewUser{\r\n  AddNewUser(input:{\r\n    RoleID:\"412064f681de4700b3bd9bbd35e1ff50\", \r\n  \tUserName:\"rajib_dey123\"\r\n    Email:\"rajib_dey123@bnzl.com\"\r\n    Password:\"P@ssw0rd\"\r\n    Properties:[\r\n      {\r\n        key:\"FirstName\"\r\n        DataType:String\r\n        value:\"Rajib\"\r\n      },\r\n      {\r\n        key:\"LastName\"\r\n        DataType:String\r\n        value:\"Dey\"\r\n      },\r\n      {\r\n        key:\"PhoneNumber\"\r\n        DataType:String\r\n        value:\"642102960832\"\r\n      },\r\n      \r\n    ]\r\n    \r\n  }){\r\n    UserID\r\n    RoleID\r\n    UserName\r\n    Email\r\n    Password\r\n    CreatedAT\r\n    ModifiedBy\r\n    IsActive\r\n    CreatedAT\r\n    UpdatedAT\r\n    DeletedAT\r\n    Properties{\r\n      key\r\n      value\r\n      DataType\r\n    }\r\n  }\r\n}\r\n\r\n",
 								"variables": ""
 							}
 						},
@@ -402,7 +357,7 @@
 						"body": {
 							"mode": "graphql",
 							"graphql": {
-								"query": "mutation ModifyUser{\r\n  ModifyUser(\r\n    _id:\"1e636a520e6945199f19752a064f05e7\",\r\n    input:{\r\n    RoleID:\"1111111111111111111\", \r\n  \tUserName:\"rajib_dey123\"\r\n    Email:\"rajib_dey13@bnzl.com\"\r\n    Password:\"P@ssw0rd\"\r\n    Properties:[\r\n      {\r\n        key:\"FirstName\"\r\n        DataType:String\r\n        value:\"Rajib\"\r\n      },\r\n      {\r\n        key:\"LastName\"\r\n        DataType:String\r\n        value:\"Dey\"\r\n      },\r\n      {\r\n        key:\"PhoneNumber\"\r\n        DataType:String\r\n        value:\"64210296083332\"\r\n      },\r\n      \r\n    ]\r\n    \r\n  }){\r\n    UserID\r\n    RoleID\r\n    UserName\r\n    Email\r\n    Password\r\n    CreatedAT\r\n    ModifiedBy\r\n    IsActive\r\n    CreatedAT\r\n    UpdatedAT\r\n    DeletedAT\r\n    Properties{\r\n      key\r\n      value\r\n      DataType\r\n    }\r\n  }\r\n}",
+								"query": "mutation ModifyUser{\r\n  ModifyUser(\r\n    _id:\"bc9a66c48a344d989de8c09c31734d80\",\r\n    input:{\r\n    RoleID:\"1111111111111111112\", \r\n  \tUserName:\"rajib_dey123\"\r\n    Email:\"rajib_dey13@bnzl.com\"\r\n    Password:\"P@ssw0rd\"\r\n    Properties:[\r\n      {\r\n        key:\"FirstName\"\r\n        DataType:String\r\n        value:\"Rajib\"\r\n      },\r\n      {\r\n        key:\"LastName\"\r\n        DataType:String\r\n        value:\"Dey\"\r\n      },\r\n      {\r\n        key:\"PhoneNumber\"\r\n        DataType:String\r\n        value:\"64210296083332\"\r\n      },\r\n      \r\n    ]\r\n    \r\n  }){\r\n    UserID\r\n    RoleID\r\n    UserName\r\n    Email\r\n    Password\r\n    CreatedAT\r\n    ModifiedBy\r\n    IsActive\r\n    CreatedAT\r\n    UpdatedAT\r\n    DeletedAT\r\n    Properties{\r\n      key\r\n      value\r\n      DataType\r\n    }\r\n  }\r\n}",
 								"variables": ""
 							}
 						},
@@ -454,6 +409,262 @@
 			]
 		},
 		{
+			"name": "User_Meta",
+			"item": [
+				{
+					"name": "UserFormCollection",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/userform/metauser?query= query GetuserMetaCollection {\n GetUserMetaCollection{\n\n\t\tFields {\n      FieldID\n      FieldName\n      DataType\n      FieldType\n      IsRequired\n      Visibility\n      SystemFieled\n      MaxValue\n      MinValue\n      DefaultValue\n      PossibleValues\n      FieldOrder\n\t\t} \n\t}\n}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"userform",
+								"metauser"
+							],
+							"query": [
+								{
+									"key": "query",
+									"value": " query GetuserMetaCollection {\n GetUserMetaCollection{\n\n\t\tFields {\n      FieldID\n      FieldName\n      DataType\n      FieldType\n      IsRequired\n      Visibility\n      SystemFieled\n      MaxValue\n      MinValue\n      DefaultValue\n      PossibleValues\n      FieldOrder\n\t\t} \n\t}\n}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add new field",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation AddNewElement_Meta_User{\r\n  AddNewElement_Meta_User(input:{\r\n          FieldName: \"Gender\",\r\n          DataType: String,\r\n          FieldType: TextBox,\r\n          IsRequired: true,\r\n          Visibility: true,\r\n          SystemFieled: false,\r\n          MaxValue: 32,\r\n          MinValue: 8,\r\n          DefaultValue: \"\",\r\n          PossibleValues: null,\r\n          FieldOrder: 5}){\r\n\t\tFields{\r\n       FieldID\r\n      FieldName\r\n      DataType\r\n      FieldType\r\n      IsRequired\r\n      Visibility\r\n      SystemFieled\r\n      MaxValue\r\n      MinValue\r\n      DefaultValue\r\n      PossibleValues\r\n      FieldOrder\r\n    }\r\n  }\r\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{url}}/userform/addnewfield",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"userform",
+								"addnewfield"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Modfify Field",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation  ModifyElement_Meta_user{\r\n  ModifyElement_Meta_user(_id: \"417a2a9fb82b4056836ec64490788b6c\", input:{\r\n\t\t\tFieldName:\"Status\",\r\n          DataType: String,\r\n          FieldType: TextBox,\r\n          IsRequired: true,\r\n          Visibility: true,\r\n          SystemFieled: false,\r\n          MaxValue: 32,\r\n          MinValue: 8,\r\n          DefaultValue: \"\",\r\n          PossibleValues: null,\r\n          FieldOrder: 5\r\n  }){\r\n    Fields{\r\n         FieldID\r\n      FieldName\r\n      DataType\r\n      FieldType\r\n      IsRequired\r\n      Visibility\r\n      SystemFieled\r\n      MaxValue\r\n      MinValue\r\n      DefaultValue\r\n      PossibleValues\r\n      FieldOrder\r\n    }\r\n  }\r\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{url}}/userform/modifyfield",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"userform",
+								"modifyfield"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Field",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation DeleteElement_Meta_user{\r\n\tDeleteElement_Meta_user(_id:\"5577006791947779410\"){\r\n    Fields{\r\n       FieldID\r\n        FieldName\r\n        DataType\r\n        FieldType\r\n        IsRequired\r\n        Visibility\r\n        SystemFieled\r\n        MaxValue\r\n        MinValue\r\n        DefaultValue\r\n        PossibleValues\r\n        FieldOrder\r\n    }\r\n  }\r\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{url}}/userform/deletefield",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"userform",
+								"deletefield"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Activity_Meta",
+			"item": [
+				{
+					"name": "ActivityFormCollection",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/activityform/metaactivity?query=query GetMetaActivityCollection{\n  GetMetaActivityCollection{\n    Fields{\n      FieldID\n      FieldName\n      DataType\n      FieldType\n      IsRequired\n      Visibility\n      SystemFieled\n      MaxValue\n      MinValue\n      DefaultValue\n      PossibleValues\n      FieldOrder\n    }\n  }\n}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"activityform",
+								"metaactivity"
+							],
+							"query": [
+								{
+									"key": "query",
+									"value": "query GetMetaActivityCollection{\n  GetMetaActivityCollection{\n    Fields{\n      FieldID\n      FieldName\n      DataType\n      FieldType\n      IsRequired\n      Visibility\n      SystemFieled\n      MaxValue\n      MinValue\n      DefaultValue\n      PossibleValues\n      FieldOrder\n    }\n  }\n}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add new field",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation AddNewElement_Meta_Activity{\r\n  AddNewElement_Meta_Activity(input:{\r\n          FieldName: \"Status\",\r\n          DataType: String,\r\n          FieldType: TextBox,\r\n          IsRequired: true,\r\n          Visibility: true,\r\n          SystemFieled: false,\r\n          MaxValue: 32,\r\n          MinValue: 8,\r\n          DefaultValue: \"\",\r\n          PossibleValues: null,\r\n          FieldOrder: 5}){\r\n\t\tFields{\r\n       FieldID\r\n      FieldName\r\n      DataType\r\n      FieldType\r\n      IsRequired\r\n      Visibility\r\n      SystemFieled\r\n      MaxValue\r\n      MinValue\r\n      DefaultValue\r\n      PossibleValues\r\n      FieldOrder\r\n    }\r\n  }\r\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{url}}/activityform/addnewfield",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"activityform",
+								"addnewfield"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Modfify Field",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation  ModifyElement_Meta_Activity{\r\n  ModifyElement_Meta_Activity(_id: \"511d6414aac4456bb573266170a7931a\", input:{\r\n\t\t\t\t\tFieldName:\"Email\",\r\n          DataType: String,\r\n          FieldType: TextBox,\r\n          IsRequired: true,\r\n          Visibility: true,\r\n          SystemFieled: false,\r\n          MaxValue: 32,\r\n          MinValue: 8,\r\n          DefaultValue: \"\",\r\n          PossibleValues: null,\r\n          FieldOrder: 5\r\n  }){\r\n    Fields{\r\n         FieldID\r\n      FieldName\r\n      DataType\r\n      FieldType\r\n      IsRequired\r\n      Visibility\r\n      SystemFieled\r\n      MaxValue\r\n      MinValue\r\n      DefaultValue\r\n      PossibleValues\r\n      FieldOrder\r\n    }\r\n  }\r\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{url}}/activityform/modifyfield",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"activityform",
+								"modifyfield"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Field",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation DeleteElement_Meta_Activity{\r\n\tDeleteElement_Meta_Activity(_id:\"a85aa521a44d49bab837bfacc3d59e1\")\r\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{url}}/activityform/deletefield",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"activityform",
+								"deletefield"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "Activity",
 			"item": [
 				{
@@ -468,18 +679,18 @@
 							}
 						],
 						"url": {
-							"raw": "{{url}}/user/getalluser?query=query GetAllUser {\n  GetAllUser{\n    UserID\n    RoleID\n    UserName\n    Password\n    Email\n    CreatedAT\n    CreatedBy\n    UpdatedAT\n    SystemUser\n    Properties{\n      key\n      value\n    }\n  }\n}",
+							"raw": "{{url}}/activity/getallactivities?query=query GetAllActivity{\n  GetAllActivity{\n    ActivityID\n    CreatedAT\n    UpdatedAT\n    CreatedBy\n    ModifiedBy\n    DeletedAT\n    Properties{\n      key\n      value\n    }\n  }\n}",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
-								"user",
-								"getalluser"
+								"activity",
+								"getallactivities"
 							],
 							"query": [
 								{
 									"key": "query",
-									"value": "query GetAllUser {\n  GetAllUser{\n    UserID\n    RoleID\n    UserName\n    Password\n    Email\n    CreatedAT\n    CreatedBy\n    UpdatedAT\n    SystemUser\n    Properties{\n      key\n      value\n    }\n  }\n}"
+									"value": "query GetAllActivity{\n  GetAllActivity{\n    ActivityID\n    CreatedAT\n    UpdatedAT\n    CreatedBy\n    ModifiedBy\n    DeletedAT\n    Properties{\n      key\n      value\n    }\n  }\n}"
 								}
 							]
 						}
@@ -498,23 +709,23 @@
 							}
 						],
 						"url": {
-							"raw": "{{url}}/user/getuser?query=query GetUserById {\n  GetUserByID(_id:\"b19ef2c85fe448d1b37ef013866c4b7b\"){\n    UserID\n    UserName\n    Email\n    Properties{\n      key\n      value\n    }\n  }\n}",
+							"raw": "{{url}}/activity/getactivity?query=query GetActivityByID{\n  GetActivityByID(_id:\"38d0aede8918428d93d9bb3c809c0bfa\"){\n     ActivityID\n    CreatedAT\n    UpdatedAT\n    CreatedBy\n    ModifiedBy\n    DeletedAT\n    Properties{\n      key\n      value\n    }\n  }\n}",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
-								"user",
-								"getuser"
+								"activity",
+								"getactivity"
 							],
 							"query": [
 								{
 									"key": "",
-									"value": null,
+									"value": "",
 									"disabled": true
 								},
 								{
 									"key": "query",
-									"value": "query GetUserById {\n  GetUserByID(_id:\"b19ef2c85fe448d1b37ef013866c4b7b\"){\n    UserID\n    UserName\n    Email\n    Properties{\n      key\n      value\n    }\n  }\n}"
+									"value": "query GetActivityByID{\n  GetActivityByID(_id:\"38d0aede8918428d93d9bb3c809c0bfa\"){\n     ActivityID\n    CreatedAT\n    UpdatedAT\n    CreatedBy\n    ModifiedBy\n    DeletedAT\n    Properties{\n      key\n      value\n    }\n  }\n}"
 								}
 							]
 						}
@@ -535,17 +746,17 @@
 						"body": {
 							"mode": "graphql",
 							"graphql": {
-								"query": "\r\nmutation AddNewUser{\r\n  AddNewUser(input:{\r\n    RoleID:\"1111111111111111111\", \r\n  \tUserName:\"rajib_dey123\"\r\n    Email:\"rajib_dey123@bnzl.com\"\r\n    Password:\"P@ssw0rd\"\r\n    Properties:[\r\n      {\r\n        key:\"FirstName\"\r\n        DataType:String\r\n        value:\"Rajib\"\r\n      },\r\n      {\r\n        key:\"LastName\"\r\n        DataType:String\r\n        value:\"Dey\"\r\n      },\r\n      {\r\n        key:\"PhoneNumber\"\r\n        DataType:String\r\n        value:\"642102960832\"\r\n      },\r\n      \r\n    ]\r\n    \r\n  }){\r\n    UserID\r\n    RoleID\r\n    UserName\r\n    Email\r\n    Password\r\n    CreatedAT\r\n    ModifiedBy\r\n    IsActive\r\n    CreatedAT\r\n    UpdatedAT\r\n    DeletedAT\r\n    Properties{\r\n      key\r\n      value\r\n      DataType\r\n    }\r\n  }\r\n}\r\n\r\n",
+								"query": "mutation AddActivity{\r\n  AddNewActivity(input:{\r\n    Properties:[\r\n      \r\n      {\r\n        key:\"ActivityName\"\r\n        DataType:String\r\n        value:\"Payroll Webinar\"\r\n      },\r\n      {\r\n        key:\"ActivityType\"\r\n        DataType:String\r\n        value:\"Webinar\"\r\n      },\r\n      {\r\n        key:\"Start\"\r\n        DataType:String\r\n        value:\"2022-07-22 14:50:55.3376361 +1200 NZST m=+86882.857459601\"\r\n      },\r\n      {\r\n        key:\"Finish\"\r\n        DataType:String\r\n        value:\"2022-07-22 14:50:55.3376361 +1200 NZST m=+86882.857459601\"\r\n      },\r\n    ]\r\n  }){\r\n   ActivityID\r\n    CreatedAT\r\n    UpdatedAT\r\n    CreatedBy\r\n    ModifiedBy\r\n    DeletedAT\r\n    Properties{\r\n      key\r\n      value\r\n    }\r\n    \r\n  }\r\n}\r\n\r\n",
 								"variables": ""
 							}
 						},
 						"url": {
-							"raw": "{{url}}/user/",
+							"raw": "{{url}}/activity/",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
-								"user",
+								"activity",
 								""
 							]
 						}
@@ -566,18 +777,18 @@
 						"body": {
 							"mode": "graphql",
 							"graphql": {
-								"query": "mutation ModifyUser{\r\n  ModifyUser(\r\n    _id:\"1e636a520e6945199f19752a064f05e7\",\r\n    input:{\r\n    RoleID:\"1111111111111111111\", \r\n  \tUserName:\"rajib_dey123\"\r\n    Email:\"rajib_dey13@bnzl.com\"\r\n    Password:\"P@ssw0rd\"\r\n    Properties:[\r\n      {\r\n        key:\"FirstName\"\r\n        DataType:String\r\n        value:\"Rajib\"\r\n      },\r\n      {\r\n        key:\"LastName\"\r\n        DataType:String\r\n        value:\"Dey\"\r\n      },\r\n      {\r\n        key:\"PhoneNumber\"\r\n        DataType:String\r\n        value:\"64210296083332\"\r\n      },\r\n      \r\n    ]\r\n    \r\n  }){\r\n    UserID\r\n    RoleID\r\n    UserName\r\n    Email\r\n    Password\r\n    CreatedAT\r\n    ModifiedBy\r\n    IsActive\r\n    CreatedAT\r\n    UpdatedAT\r\n    DeletedAT\r\n    Properties{\r\n      key\r\n      value\r\n      DataType\r\n    }\r\n  }\r\n}",
+								"query": "\r\nmutation ModifyActivity{\r\n  ModifyActivity(_id:\"7e84bd0a1c1c45869225985fa1dd85d2\", input:{\r\n    Properties:[\r\n       {\r\n        key:\"ActivityName\"\r\n        DataType:String\r\n        value:\"MYOB Advance Webinar\"\r\n      },\r\n      {\r\n        key:\"ActivityType\"\r\n        DataType:String\r\n        value:\"Webinar\"\r\n      },\r\n      {\r\n        key:\"Start\"\r\n        DataType:String\r\n        value:\"2022-07-23 14:50:55.3376361 +1200 NZST m=+86882.857459601\"\r\n      },\r\n      {\r\n        key:\"Finish\"\r\n        DataType:String\r\n        value:\"2022-07-23 14:50:55.3376361 +1200 NZST m=+86882.857459601\"\r\n      },\r\n    ]\r\n  })\r\n  {\r\n    ActivityID\r\n    CreatedAT\r\n    UpdatedAT\r\n    CreatedBy\r\n    ModifiedBy\r\n    DeletedAT\r\n    Properties{\r\n      key\r\n      value\r\n    }\r\n    \r\n  }\r\n}",
 								"variables": ""
 							}
 						},
 						"url": {
-							"raw": "{{url}}/user/modifyuser/",
+							"raw": "{{url}}/activity/modifyactivity/",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
-								"user",
-								"modifyuser",
+								"activity",
+								"modifyactivity",
 								""
 							]
 						}
@@ -598,18 +809,18 @@
 						"body": {
 							"mode": "graphql",
 							"graphql": {
-								"query": "mutation DeleteUser{\r\n    DeleteUser(_id: \"1e636a520e6945199f19752a064f05e7\")\r\n}",
+								"query": "mutation DeleteActivity {\r\n  DeleteActivity(_id:\"441975e798db429f91d5cb362a84e38e\")\r\n}",
 								"variables": ""
 							}
 						},
 						"url": {
-							"raw": "{{url}}/user/deleteuser",
+							"raw": "{{url}}/activity/deleteactivity",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
-								"user",
-								"deleteuser"
+								"activity",
+								"deleteactivity"
 							]
 						}
 					},
@@ -646,7 +857,7 @@
 		},
 		{
 			"key": "token",
-			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcnlkYXRlIjoiMjAyMi0wNy0yNiAwNjo0OTo0My40MDYzNDIyICsxMjAwIE5aU1QgbT0rODY5NDguNTEzOTU2NzAxIiwicm9sZWlkIjoiMTExMTExMTExMTExMTExMTExMSIsInVzZXJuYW1lIjoiYm56bF9hZG1pbiJ9.4CENqfHuaNyTaaxcGJV4TRsf4sTl559ugdjaQvPB8EI",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcnlkYXRlIjoiMjAyMi0wNy0yNiAxNDo0OToyOS4xNjc4NDg5ICsxMjAwIE5aU1QgbT0rODgwMjUuMzQ2MzQ3NjAxIiwicm9sZWlkIjoiMTExMTExMTExMTExMTExMTExMSIsInVzZXJuYW1lIjoiYm56bF9hZG1pbiJ9.6I__9z98YvZkHCOWBbkJit1PLz-wH9uCIey458M_ZIc",
 			"type": "string"
 		}
 	]
