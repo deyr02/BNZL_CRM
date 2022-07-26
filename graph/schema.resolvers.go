@@ -5,6 +5,7 @@ package graph
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/deyr02/bnzlcrm/graph/generated"
 	"github.com/deyr02/bnzlcrm/graph/model"
@@ -36,6 +37,16 @@ var userCollectionRepository userCollection.User_Repository = userCollection.New
 var metaActivityRepository metaactivity.Meta_Activity_Repository = metaactivity.New_Meta_Activity_Repository(client)
 var activityRepository activityCollection.Activity_Repository = activityCollection.New_Activity_Repository(client)
 
+///
+///
+///
+///
+///
+///
+///
+///
+///
+///
 ///--------------------------------------------------------------------------------------------------------
 ///--------------------------------------------------------------------------------------------------------
 ///--------------------------------------------------------------------------------------------------------
@@ -85,6 +96,30 @@ func (r *mutationResolver) DeleteElementMetaActivity(ctx context.Context, id *st
 	return metaActivityRepository.DeleteElement_Meta_Activity(ctx, *id)
 }
 
+///--------------------------------------------------------------------------------------------------------
+///------------------------------------Meta Account Collection------------------------------------------------
+///--------------------------------------------------------------------------------------------------------
+// AddNewElementMetaAccount is the resolver for the AddNewElement_Meta_Account field.
+func (r *mutationResolver) AddNewElementMetaAccount(ctx context.Context, input *model.NewCustomFieldElement) (*model.MetaAccountCollection, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+// ModifyElementMetaAccount is the resolver for the ModifyElement_Meta_Account field.
+func (r *mutationResolver) ModifyElementMetaAccount(ctx context.Context, id *string, input *model.NewCustomFieldElement) (*model.MetaAccountCollection, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+// DeleteElementMetaAccount is the resolver for the DeleteElement_Meta_Account field.
+func (r *mutationResolver) DeleteElementMetaAccount(ctx context.Context, id *string) (string, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+///
+///
+///
+///
+///
+///
 ///--------------------------------------------------------------------------------------------------------
 ///--------------------------------------- User Collection ------------------------------------------------
 ///--------------------------------------------------------------------------------------------------------
@@ -146,6 +181,25 @@ func (r *mutationResolver) DeleteActivity(ctx context.Context, id *string) (stri
 	return activityRepository.DeleteActivity(ctx, *id)
 }
 
+///--------------------------------------------------------------------------------------------------------
+///------------------------------------ Account collection ----------------------------------------------
+///--------------------------------------------------------------------------------------------------------
+
+// AddNewAccount is the resolver for the AddNewAccount field.
+func (r *mutationResolver) AddNewAccount(ctx context.Context, input *model.NewActivity) (*model.Account, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+// ModifyAccount is the resolver for the ModifyAccount field.
+func (r *mutationResolver) ModifyAccount(ctx context.Context, id *string, input *model.NewActivity) (*model.Account, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+// DeleteAccount is the resolver for the DeleteAccount field.
+func (r *mutationResolver) DeleteAccount(ctx context.Context, id *string) (string, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
 ///
 ///
 ///
@@ -184,11 +238,19 @@ func (r *queryResolver) GetUserMetaCollection(ctx context.Context) (*model.MetaU
 }
 
 ///--------------------------------------------------------------------------------------------------------
-///------------------------------------ User Activity collection ----------------------------------------------
+///------------------------------------ meta Activity collection ----------------------------------------------
 ///--------------------------------------------------------------------------------------------------------
 // GetMetaActivityCollection is the resolver for the GetMetaActivityCollection field.
 func (r *queryResolver) GetMetaActivityCollection(ctx context.Context) (*model.MetaActivityCollection, error) {
 	return metaActivityRepository.GetMetaActivityCollection(ctx)
+}
+
+///--------------------------------------------------------------------------------------------------------
+///------------------------------------ Meta Account collection ----------------------------------------------
+///--------------------------------------------------------------------------------------------------------
+// GetMetaAccountCollection is the resolver for the GetMetaAccountCollection field.
+func (r *queryResolver) GetMetaAccountCollection(ctx context.Context) (*model.MetaAccountCollection, error) {
+	panic(fmt.Errorf("not implemented"))
 }
 
 ///--------------------------------------------------------------------------------------------------------
@@ -228,6 +290,19 @@ func (r *queryResolver) GetAllActivity(ctx context.Context) ([]*model.Activity, 
 // GetActivityByID is the resolver for the GetActivityByID field.
 func (r *queryResolver) GetActivityByID(ctx context.Context, id *string) (*model.Activity, error) {
 	return activityRepository.GetActivityByID(ctx, *id)
+}
+
+///--------------------------------------------------------------------------------------------------------
+///------------------------------------ Account Collection ----------------------------------------------
+///--------------------------------------------------------------------------------------------------------
+// GetAllAccount is the resolver for the GetAllAccount field.
+func (r *queryResolver) GetAllAccount(ctx context.Context) ([]*model.Account, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+// GetAccountByID is the resolver for the GetAccountByID field.
+func (r *queryResolver) GetAccountByID(ctx context.Context, id *string) (*model.Account, error) {
+	panic(fmt.Errorf("not implemented"))
 }
 
 // Mutation returns generated.MutationResolver implementation.

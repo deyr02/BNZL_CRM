@@ -8,6 +8,17 @@ import (
 	"strconv"
 )
 
+type Account struct {
+	AccountID   string          `json:"AccountID"`
+	AccountName string          `json:"AccountName"`
+	CreatedAt   *string         `json:"CreatedAT"`
+	UpdatedAt   *string         `json:"UpdatedAT"`
+	DeletedAt   *string         `json:"DeletedAT"`
+	CreatedBy   *string         `json:"CreatedBy"`
+	ModifiedBy  *string         `json:"ModifiedBy"`
+	Properties  []*ElementValue `json:"Properties"`
+}
+
 type Activity struct {
 	ActivityID string          `json:"ActivityID"`
 	CreatedAt  *string         `json:"CreatedAT"`
@@ -44,12 +55,20 @@ type Login struct {
 	Password string `json:"Password"`
 }
 
+type MetaAccountCollection struct {
+	Fields []*CustomFieldElement `json:"Fields"`
+}
+
 type MetaActivityCollection struct {
 	Fields []*CustomFieldElement `json:"Fields"`
 }
 
 type MetaUserCollection struct {
 	Fields []*CustomFieldElement `json:"Fields"`
+}
+
+type NewAccount struct {
+	Properties []*NewElementValue `json:"Properties"`
 }
 
 type NewActivity struct {

@@ -274,19 +274,19 @@ type Query{
   ##User
   GetAllUser:[User!]!
   GetUserByID(_id:String): User!
- # GetUserByUserName (_userName: String): User!
+  # GetUserByUserName (_userName: String): User!
 
 
-## --------Activity--------------
-GetAllActivity: [Activity!]!
-GetActivityByID(_id:String): Activity!
+  ## --------Activity--------------
+  GetAllActivity: [Activity!]!
+  GetActivityByID(_id:String): Activity!
 
 
-## --------Account--------------
-GetAllAccount: [Account!]!
-GetAccountByID(_id:String): Account!
+  ## --------Account--------------
+  GetAllAccount: [Account!]!
+  GetAccountByID(_id:String): Account!
 
-}
+  }
 
 type Mutation{
 
@@ -335,9 +335,9 @@ type Mutation{
  
 
   #-------------------Account-collection---------------------
-  AddNewActivity(input:NewActivity): Activity!
-  ModifyActivity(_id:String, input:NewActivity): Activity!
-  DeleteActivity(_id: String): String!
+  AddNewAccount(input:NewActivity): Account!
+  ModifyAccount(_id:String, input:NewActivity): Account!
+  DeleteAccount(_id: String): String!
 
  
 
