@@ -180,6 +180,48 @@ type TokenServiceDto{
   ExpiryDate:Date!
 }
 
+#------------------------------------------
+#--------- Account --------------------------
+#------------------------------------------
+
+#----------Account Collection-----------------
+type Account{
+  AccountID:ID!
+  AccountName: String!
+
+  CreatedAT: Date
+  UpdatedAT: Date
+  DeletedAT: Date
+
+  CreatedBy: ID
+  ModifiedBy: ID
+
+  Properties: [ElementValue!]!
+}
+
+
+input NewAccount{
+   Properties: [NewElementValue!]!
+}
+
+#-----------------------Account-Meta-collection------------------
+
+type MetaAccountCollection{				
+    Fields: [CustomFieldElement!]!
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 #------------------------------------------
 #--------- Activity --------------------------
@@ -215,6 +257,14 @@ type Query{
   GetUserMetaCollection: MetaUserCollection!
   ##------MetaActivity---------
   GetMetaActivityCollection: MetaActivityCollection
+  ##------MetaActivity---------
+  GetMetaAccountCollection: MetaAccountCollection
+
+
+
+
+
+
 
 
   ##UserRole
@@ -231,6 +281,11 @@ type Query{
 GetAllActivity: [Activity!]!
 GetActivityByID(_id:String): Activity!
 
+
+## --------Account--------------
+GetAllAccount: [Account!]!
+GetAccountByID(_id:String): Account!
+
 }
 
 type Mutation{
@@ -245,6 +300,17 @@ type Mutation{
   ModifyElement_Meta_Activity(_id:String, input:NewCustomFieldElement):MetaActivityCollection!
   DeleteElement_Meta_Activity(_id:String):String!
 
+ #-------------------Account-Meta-collection---------------------
+  AddNewElement_Meta_Account(input:NewCustomFieldElement): MetaAccountCollection!
+  ModifyElement_Meta_Account(_id:String, input:NewCustomFieldElement):MetaAccountCollection!
+  DeleteElement_Meta_Account(_id:String):String!
+
+
+
+
+#----------------------------------------------------------------------------------
+#-----------Collections------------------------------------------------------------
+#----------------------------------------------------------------------------------
 
   #--------userCollection----------------------
   AddNewUser(input:NewUser): User!
@@ -266,5 +332,15 @@ type Mutation{
   AddNewActivity(input:NewActivity): Activity!
   ModifyActivity(_id:String, input:NewActivity): Activity!
   DeleteActivity(_id: String): String!
+ 
+
+  #-------------------Account-collection---------------------
+  AddNewActivity(input:NewActivity): Activity!
+  ModifyActivity(_id:String, input:NewActivity): Activity!
+  DeleteActivity(_id: String): String!
+
+ 
+
+
 
 }
